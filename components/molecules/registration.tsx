@@ -109,16 +109,14 @@ const Registration = () => {
         const response = await axios.post("/api/users/register", user);
         if (response.status === 200) {
           setMainError(false);
-          router.push("/");
+          setMainErrorMsg("");
+          router.push("/login");
         }
       } catch (error: any) {
-        const errorData = error.response?.data?.errors || {
-          message: "An error occurred",
-        };
-        const errorMessages =
-          Object.values(errorData).flat().join(", ") || errorData.message;
+        const errorData = error.response?.data?.errors;
+
         setMainError(true);
-        setMainErrorMsg(/*(await res.json()).error*/ errorMessages);
+        setMainErrorMsg(/*(await res.json()).error*/ errorData);
       }
     }
   };
