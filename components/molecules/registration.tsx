@@ -4,6 +4,12 @@ import { useState } from "react";
 import React from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import {
+  ConfirmPasswordChecker,
+  EmailChecker,
+  PasswordChecker,
+  UsernameChecker,
+} from "@/lib/inputFieldChecker";
 
 const Registration = () => {
   const router = useRouter();
@@ -34,70 +40,34 @@ const Registration = () => {
   let errorPassword: boolean = false;
   let errorPasswordConfirm: boolean = false;
 
-  const isValidEmail = (emailValid: string): boolean => {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(emailValid).toLowerCase());
-  };
-
   const onRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (user.email === "") {
-      setEmailError(true);
-      errorEmail = true;
-      setEmailErrorMsg("Email is required");
-    } else if (!isValidEmail(user.email)) {
-      setEmailError(true);
-      errorEmail = true;
-      setEmailErrorMsg("Provide a valid email address");
-    } else {
-      setEmailError(false);
-      errorEmail = false;
-      setEmailErrorMsg("");
-    }
+    setMainError(false);
+    setMainErrorMsg("");
 
-    if (user.username === "") {
-      setNameError(true);
-      errorUserName = true;
-      setNameErrorMsg("Username is required");
-    } else if (user.username.length > 16) {
-      setNameError(true);
-      errorUserName = true;
-      setNameErrorMsg("Username must be under 16 characters");
-    } else {
-      setNameError(false);
-      errorUserName = false;
-      setNameErrorMsg("");
-    }
+    setNameError(UsernameChecker(user.username)[0]);
+    setNameErrorMsg(UsernameChecker(user.username)[1]);
+    errorUserName = UsernameChecker(user.username)[0];
+    // First value is a boolean second value is a string
+    setEmailError(EmailChecker(user.email)[0]);
+    setEmailErrorMsg(EmailChecker(user.email)[1]);
+    errorEmail = EmailChecker(user.email)[0];
 
-    if (user.password === "") {
-      setPasswordError(true);
-      errorPassword = true;
-      setPasswordErrorMsg("Password is required");
-    } else if (user.password.length < 8) {
-      setPasswordError(true);
-      errorPassword = true;
-      setPasswordErrorMsg("Password must be at least 8 characters.");
-    } else {
-      setPasswordError(false);
-      errorPassword = false;
-      setPasswordErrorMsg("");
-    }
+    setPasswordError(PasswordChecker(user.password, true)[0]);
+    setPasswordErrorMsg(PasswordChecker(user.password, true)[1]);
+    errorPassword = PasswordChecker(user.password, true)[0];
 
-    if (user.passwordConfirm === "") {
-      setPasswordConfirmError(true);
-      errorPasswordConfirm = true;
-      setPasswordConfirmErrorMsg("Please confirm your password.");
-    } else if (user.passwordConfirm !== user.password) {
-      setPasswordConfirmError(true);
-      errorPasswordConfirm = true;
-      setPasswordConfirmErrorMsg("Passwords doesn't match.");
-    } else {
-      setPasswordConfirmError(false);
-      errorPasswordConfirm = false;
-      setPasswordConfirmErrorMsg("");
-    }
+    setPasswordConfirmError(
+      ConfirmPasswordChecker(user.password, user.passwordConfirm)[0]
+    );
+    setPasswordConfirmErrorMsg(
+      ConfirmPasswordChecker(user.password, user.passwordConfirm)[1]
+    );
+    errorPassword = ConfirmPasswordChecker(
+      user.password,
+      user.passwordConfirm
+    )[0];
 
     if (
       errorEmail === false &&
@@ -109,12 +79,11 @@ const Registration = () => {
         const response = await axios.post("/api/users/register", user);
         if (response.status === 200) {
           setMainError(false);
-          router.push("/");
+          setMainErrorMsg("");
+          router.push("/login");
         }
       } catch (error: any) {
-        const errorData = error.response?.data?.errors || {
-          message: "An error occurred",
-        };
+        const errorData = error.response?.data?.errors;
         const errorMessages =
           Object.values(errorData).flat().join(", ") || errorData.message;
         setMainError(true);
