@@ -67,6 +67,9 @@ export const ConfirmPasswordChecker = (
   if (passwordConfirmed === "") {
     passwordError = true;
     passwordErrorMsg = "Please confirm your password.";
+  } else if (password.length < 8) {
+    passwordError = false;
+    passwordErrorMsg = "";
   } else if (passwordConfirmed !== password) {
     passwordError = true;
     passwordErrorMsg = "Passwords doesn't match.";
