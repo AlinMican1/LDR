@@ -3,7 +3,7 @@ import { useState } from "react";
 import InputField from "../atoms/inputField";
 import React from "react";
 import axios from "axios";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { EmailChecker, PasswordChecker } from "@/lib/inputFieldChecker";
 
 const Login = () => {
@@ -21,34 +21,19 @@ const Login = () => {
   const [mainErrorMsg, setMainErrorMsg] = useState("");
   let errorEmail: boolean = false;
   let errorPassword: boolean = false;
-  const isValidEmail = (emailValid: string): boolean => {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(emailValid).toLowerCase());
-  };
+
+  const router = useRouter();
+
   const onLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setMainError(false);
     setMainErrorMsg("");
 
-    // if (user.email === "") {
-    //   setEmailError(true);
-    //   errorEmail = true;
-    //   setEmailErrorMsg("Email is required");
-    // } else if (!isValidEmail(user.email)) {
-    //   setEmailError(true);
-    //   errorEmail = true;
-    //   setEmailErrorMsg("Provide a valid email address");
-    // } else {
-    //   setEmailError(false);
-    //   errorEmail = false;
-    //   setEmailErrorMsg("");
-    // }
-
     // First value is a boolean second value is a string
     setEmailError(EmailChecker(user.email)[0]);
     setEmailErrorMsg(EmailChecker(user.email)[1]);
     errorEmail = EmailChecker(user.email)[0];
+
     setPasswordError(PasswordChecker(user.password, false)[0]);
     setPasswordErrorMsg(PasswordChecker(user.password, false)[1]);
     errorPassword = PasswordChecker(user.password, false)[0];
@@ -57,9 +42,9 @@ const Login = () => {
       try {
         const response = await axios.post("/api/users/login", user);
         if (response.status === 200) {
+          router.push("/");
           setMainError(false);
           setMainErrorMsg("");
-          router.push("/");
         }
       } catch (error: any) {
         const errorData = error.response?.data?.errors || {
@@ -99,7 +84,7 @@ const Login = () => {
       />
 
       {mainError && <p>{mainErrorMsg}</p>}
-      <button onClick={onLogin}>Register</button>
+      <button onClick={onLogin}>LogIn</button>
     </div>
   );
 };
