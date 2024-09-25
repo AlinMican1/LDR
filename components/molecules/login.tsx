@@ -2,9 +2,15 @@
 import { useState } from "react";
 import InputField from "../atoms/inputField";
 import React from "react";
-import axios from "axios";
+import Logo from "../atoms/logo";
 import { useRouter } from "next/navigation";
 import { EmailChecker, PasswordChecker } from "@/lib/inputFieldChecker";
+import { signIn } from "next-auth/react";
+import "./login&registration.css";
+import ContainerRound from "../atoms/containerRound";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const Login = () => {
   const [user, setUser] = React.useState({
@@ -26,9 +32,8 @@ const Login = () => {
 
   const onLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMainError(false);
+    setMainError(false); // Hide the main error before login attempt
     setMainErrorMsg("");
-
     // First value is a boolean second value is a string
     setEmailError(EmailChecker(user.email)[0]);
     setEmailErrorMsg(EmailChecker(user.email)[1]);
@@ -40,52 +45,75 @@ const Login = () => {
 
     if (errorEmail === false && errorPassword === false) {
       try {
-        const response = await axios.post("/api/users/login", user);
-        if (response.status === 200) {
+        const signInData = await signIn("credentials", {
+          redirect: false,
+          email: user.email,
+          password: user.password,
+        });
+
+        if (!signInData?.error) {
           router.push("/");
-          setMainError(false);
-          setMainErrorMsg("");
+        } else {
+          setMainError(true);
+          setMainErrorMsg("Credentials are incorrect");
         }
       } catch (error: any) {
-        const errorData = error.response?.data?.errors || {
-          message: "Credentials incorrect",
-        };
-        const errorMessages =
-          Object.values(errorData).flat().join(", ") || errorData.message;
         setMainError(true);
-        setMainErrorMsg(/*(await res.json()).error*/ errorMessages);
+        setMainErrorMsg("Something went wrong, please try again!");
       }
     }
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <InputField
-        type="text"
-        label="Email"
-        value={user.email}
-        name="name"
-        error={emailError}
-        onChange={(e) => setUser({ ...user, email: e.target.value })}
-        errorMsg={emailErrorMsg}
-        placeholder="Please enter your Email"
-      />
+    <body>
+      <div className="logoPosition">
+        <Logo />
+      </div>
 
-      <InputField
-        type="text"
-        label="Password"
-        value={user.password}
-        name="password"
-        error={passwordError}
-        onChange={(e) => setUser({ ...user, password: e.target.value })}
-        errorMsg={passwordErrorMsg}
-        placeholder="Please enter your Password"
-      />
+      <ContainerRound>
+        <div className="container">
+          <h1>Sign In</h1>
+          <InputField
+            type="text"
+            label="Email"
+            value={user.email}
+            name="name"
+            error={emailError}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            errorMsg={emailErrorMsg}
+            placeholder="Email..."
+            icon={<FontAwesomeIcon icon={faEnvelope} />}
+          />
 
-      {mainError && <p>{mainErrorMsg}</p>}
-      <button onClick={onLogin}>LogIn</button>
-    </div>
+          <InputField
+            type="text"
+            label="Password"
+            value={user.password}
+            name="password"
+            error={passwordError}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            errorMsg={passwordErrorMsg}
+            placeholder="Password..."
+            icon={<FontAwesomeIcon icon={faLock} />}
+          />
+          <Link href="/register" className="forgotPasswordLink">
+            <p className="forgotPassword">Forgot Password</p>
+          </Link>
+          {mainError && <p className="mainErrorMsg">{mainErrorMsg}</p>}
+          <button className="submitButton" onClick={onLogin}>
+            LogIn
+          </button>
+          <h3 className="accountInfo">
+            I don't have an account{" "}
+            <Link className="textLink" href={"/register"}>
+              {" "}
+              Register
+            </Link>
+          </h3>
+          <span className="line"></span>
+        </div>
+      </ContainerRound>
+    </body>
   );
 };
 export default Login;
