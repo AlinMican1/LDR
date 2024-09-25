@@ -1,0 +1,54 @@
+/* BOTH PAGES LOGIN AND REGISTRATION */
+.container {
+  display: grid;
+  position: relative;
+  justify-content: center;
+  padding: 30px;
+}
+
+.textLink {
+  color: rgb(81, 81, 237);
+  text-decoration: underline;
+  padding-left: 5px;
+}
+
+.accountInfo {
+  margin-top: 15px;
+  font-size: small;
+  display: flex;
+  justify-content: center;
+}
+
+/* LOGIN PAGE ONLY */
+.logoPosition {
+  display: grid;
+  justify-content: center;
+  margin: 20px;
+}
+
+.forgotPasswordLink {
+  display: flex;
+  justify-content: flex-end; /* Move content to the right */
+  margin-top: 10px;
+  margin-left: 50vw;
+}
+
+.forgotPassword {
+  color: black;
+  font-size: small;
+  font-weight: bold;
+}
+
+/* REGISTRATION PAGE ONLY */
+.agreementContainer {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  font-size: small;
+}
+
+.checkmark {
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+}

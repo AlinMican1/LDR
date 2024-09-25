@@ -5,8 +5,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #5c3955;
+    --foreground: #131212;
   }
 }
 
@@ -35,6 +35,26 @@ a {
   text-decoration: none;
 }
 
+.mainErrorMsg {
+  font-size: 3vw;
+  color: red;
+  margin: 8px 0px 8px 0px;
+}
+
+.submitButton {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 4vw;
+  border-radius: 10px;
+  background-color: rgb(50, 62, 174);
+  border: 0px solid;
+}
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: #131212;
+  margin-top: 10px;
+}
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
