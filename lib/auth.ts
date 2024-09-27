@@ -39,11 +39,12 @@ export const authOptions: NextAuthOptions = {
         if (!passwordMatch) {
           return null;
         }
-        console.log(userExist._id);
+        console.log("User from DB:", userExist);
         return {
           username: userExist.username,
           email: userExist.email,
           isAdmin: userExist.isAdmin,
+          avatarURL: userExist.avatarURL,
           id: userExist._id,
         };
       },
@@ -51,10 +52,13 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
+      console.log("User in JWT:", token);
       if (user) {
         return {
           ...token,
-          username: user.name,
+          username: user.username,
+          isAdmin: user.isAdmin,
+          avatarURL: user.avatarURL,
         };
       }
       return token;
@@ -63,8 +67,10 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
-          ...session.user,
-          username: token.username,
+          email: token.email, // Keep email if you need it
+          username: token.username, // Add username
+          isAdmin: token.isAdmin,
+          avatarURL: token.avatarURL,
         },
       };
     },
