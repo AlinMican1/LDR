@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  avatarURL: {
+    type: String,
+    default: "DefaultPicture",
+  },
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,
