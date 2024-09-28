@@ -1,16 +1,12 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import connectToDB from "@/lib/database";
 import { NextResponse, NextRequest } from "next/server";
-import multer from "multer";
 import User from "@/models/user";
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const bucketRegion = process.env.AWS_BUCKET_REGION;
 const accessKeyID = process.env.AWS_S3_ACCESS;
 const secretAccessKey = process.env.AWS_S3_SECRET_ACCESS;
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 const s3 = new S3Client({
   region: bucketRegion,
@@ -36,7 +32,8 @@ export async function POST(request: NextRequest) {
   const response = await Promise.all(
     files.map(async (file) => {
       const Body = (await file.arrayBuffer()) as Buffer;
-      const fileName = `avatars/${userEmail}.png`; // Create a unique key
+      const fileExtension = file.type.replace("image/", "");
+      const fileName = `avatars/${userEmail}.JPG`; // Create a unique key
 
       try {
         // Upload file to S3
@@ -71,5 +68,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({ message: "GET method not implemented" });
+  await connectToDB();
+  const user = await User.findOne({ email: "test@gmail.com" });
+  return NextResponse.json({ message: "User found", user });
 }

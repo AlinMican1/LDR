@@ -6,14 +6,28 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import UploadComponent from "@/components/atoms/uploadAvatar";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import axios from "axios";
 
 // Fetch session on the server side
 export default function Home() {
   // Safely access username or fallback
   const { data: session } = useSession();
+
   return (
     <div>
-      <h1>{session?.user?.avatarURL}</h1>
+      <div>
+        {session?.user?.avatarURL ? (
+          <img
+            src={session?.user?.avatarURL}
+            width={200}
+            height={130}
+            alt="Picture of the author"
+          />
+        ) : (
+          <p>No avatar found</p>
+        )}
+      </div>
       <Link href="/login">
         <button>Go to login please</button>
       </Link>
