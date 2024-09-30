@@ -25,7 +25,8 @@ const UserSchema = new mongoose.Schema({
   },
   avatarURL: {
     type: String,
-    default: "DefaultPicture",
+    default:
+      "https://alin-ldr-startup.s3.eu-north-1.amazonaws.com/avatars/noUser.JPG",
   },
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,

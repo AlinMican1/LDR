@@ -2,6 +2,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import connectToDB from "@/lib/database";
 import { NextResponse, NextRequest } from "next/server";
 import User from "@/models/user";
+import sharp from "sharp";
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const bucketRegion = process.env.AWS_BUCKET_REGION;
@@ -32,8 +33,12 @@ export async function POST(request: NextRequest) {
   const response = await Promise.all(
     files.map(async (file) => {
       const Body = (await file.arrayBuffer()) as Buffer;
-      const fileExtension = file.type.replace("image/", "");
       const fileName = `avatars/${userEmail}.JPG`; // Create a unique key
+
+      //image resize
+      // const buffer = await sharp(Body)
+      //   .resize({ height: 1000, width: 1000, fit: "contain" })
+      //   .toBuffer();
 
       try {
         // Upload file to S3
@@ -41,6 +46,7 @@ export async function POST(request: NextRequest) {
           new PutObjectCommand({
             Bucket: bucketName,
             Key: fileName, // Store file with unique key
+            // Body: buffer,
             Body,
             ContentType: file.type, // Set the content type
           })
@@ -67,8 +73,9 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(response);
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   await connectToDB();
-  const user = await User.findOne({ email: "test@gmail.com" });
+  const { email } = await request.json();
+  const user = await User.findOne({ email });
   return NextResponse.json({ message: "User found", user });
 }

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import UploadComponent from "@/components/atoms/uploadAvatar";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import axios from "axios";
+import UserAvatar from "@/components/atoms/userAvatar";
 
 // Fetch session on the server side
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
     <div>
       <div>
         {session?.user?.avatarURL ? (
-          <img
+          <Image
             src={session?.user?.avatarURL}
             width={200}
             height={130}
@@ -33,6 +33,7 @@ export default function Home() {
       </Link>
       <LogoutButton />
       <UploadComponent />
+      <UserAvatar />
     </div>
   );
 }
