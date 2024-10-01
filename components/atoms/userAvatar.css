@@ -1,0 +1,11 @@
+.avatarImage {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 10vw;
+  height: 10vw;
+}
+.test {
+  border-radius: 100%;
+  border: 0px;
+  background-color: transparent;
+}
