@@ -1,0 +1,11 @@
+.customButtonContainer {
+  font-size: medium;
+  background-color: transparent;
+  border: 0px;
+  color: grey;
+}
+
+.customButtonContainer.active {
+  color: black;
+  font-size: larger;
+}
