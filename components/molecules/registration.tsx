@@ -109,7 +109,7 @@ const Registration = () => {
   };
 
   return (
-    <body>
+    <div>
       <ContainerRound>
         <div className="container">
           <h1>Register</h1>
@@ -181,7 +181,7 @@ const Registration = () => {
           </h3>
         </div>
       </ContainerRound>
-    </body>
+    </div>
   );
 };
 

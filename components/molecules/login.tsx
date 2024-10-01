@@ -65,7 +65,7 @@ const Login = () => {
   };
 
   return (
-    <body>
+    <div>
       <div className="logoPosition">
         <Logo />
       </div>
@@ -113,7 +113,7 @@ const Login = () => {
           <span className="line"></span>
         </div>
       </ContainerRound>
-    </body>
+    </div>
   );
 };
 export default Login;
