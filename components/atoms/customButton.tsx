@@ -1,8 +1,12 @@
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import "./customButton.css";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
-interface CustomButtonProps {
+interface NavBarButtonProps {
   icon?: any;
   link: string;
   name?: string;
@@ -10,13 +14,13 @@ interface CustomButtonProps {
   onClick?: () => void; // Prop to handle click
 }
 
-const CustomButton = ({
+export function NavBarButton({
   icon,
   link,
   name,
   isActive,
   onClick,
-}: CustomButtonProps) => {
+}: NavBarButtonProps) {
   return (
     <div>
       <Link href={link}>
@@ -30,5 +34,24 @@ const CustomButton = ({
       </Link>
     </div>
   );
-};
-export default CustomButton;
+}
+
+export function LogOutButton() {
+  const router = useRouter();
+
+  const logout = async () => {
+    await signOut({ redirect: false });
+    router.push("/login"); // Manually redirect to login page
+  };
+
+  return (
+    <div>
+      <button className="customButtonContainer" onClick={logout}>
+        <div className="customLogOutButton">
+          <FontAwesomeIcon icon={faRightFromBracket} />
+          <div className="symbolAndTextSpace">Sign Out</div>
+        </div>
+      </button>
+    </div>
+  );
+}
