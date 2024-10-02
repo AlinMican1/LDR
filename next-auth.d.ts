@@ -5,6 +5,7 @@ declare module "next-auth" {
     username: string;
     isAdmin: boolean;
     avatarURL: string;
+    loverTag: string;
   }
 
   interface Session {
@@ -12,11 +13,13 @@ declare module "next-auth" {
       username: string;
       isAdmin: boolean;
       avatarURL: string;
+      loverTag: string;
     };
     token: {
       username: string;
       isAdmin: boolean;
       avatarURL: string;
+      loverTag: string;
     };
     // address: string;
   }

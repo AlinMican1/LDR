@@ -39,13 +39,14 @@ export const authOptions: NextAuthOptions = {
         if (!passwordMatch) {
           return null;
         }
-        console.log("User from DB:", userExist);
+
         return {
           username: userExist.username,
           email: userExist.email,
           isAdmin: userExist.isAdmin,
           avatarURL: userExist.avatarURL,
           id: userExist._id,
+          loverTag: userExist.loverTag,
         };
       },
     }),
@@ -59,6 +60,7 @@ export const authOptions: NextAuthOptions = {
           username: user.username,
           isAdmin: user.isAdmin,
           avatarURL: user.avatarURL,
+          loverTag: user.loverTag,
         };
       }
       return token;
@@ -71,6 +73,7 @@ export const authOptions: NextAuthOptions = {
           username: token.username, // Add username
           isAdmin: token.isAdmin,
           avatarURL: token.avatarURL,
+          loverTag: token.loverTag,
         },
       };
     },

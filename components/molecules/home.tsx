@@ -1,6 +1,7 @@
 import "./home.css";
 import UserAvatar from "../atoms/userAvatar";
-
+import { useSession } from "next-auth/react";
+import LoverTag from "../atoms/loverTag";
 const Home = () => {
   return (
     <div className="ContentContainer">
@@ -11,6 +12,7 @@ const Home = () => {
           To unlock the app to it's full extend add your significant other!{" "}
         </p>
         <button>Add</button>
+        <LoverTag />
       </div>
     </div>
   );
