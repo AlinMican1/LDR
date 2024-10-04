@@ -38,6 +38,12 @@ const UserSchema = new mongoose.Schema({
       required: true,
       default: null,
     },
+    to: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      default: null,
+    },
     status: {
       type: String,
       enum: ["pending", "accepted", "rejected"],
