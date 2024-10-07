@@ -1,8 +1,11 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import connectToDB from "@/lib/database";
 import { NextResponse, NextRequest } from "next/server";
 import User from "@/models/user";
-import sharp from "sharp";
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const bucketRegion = process.env.AWS_BUCKET_REGION;
@@ -78,4 +81,12 @@ export async function GET(request: NextRequest) {
   const { email } = await request.json();
   const user = await User.findOne({ email });
   return NextResponse.json({ message: "User found", user });
+}
+export async function GetImage(key: string) {
+  const input = {
+    Bucket: bucketName,
+    Key: "key",
+  };
+  const command = new GetObjectCommand(input);
+  const reponse = await s3.send(command);
 }

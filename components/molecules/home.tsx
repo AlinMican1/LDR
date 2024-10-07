@@ -9,6 +9,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import UploadComponent from "../atoms/uploadAvatar";
 
 const Home = () => {
   const { data: session } = useSession();
@@ -28,6 +29,7 @@ const Home = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [mainError, setMainError] = useState(false);
   const [mainErrorMsg, setMainErrorMsg] = useState("");
+
   let addLoverError = false;
 
   const router = useRouter();
@@ -48,14 +50,13 @@ const Home = () => {
         receiverLoverTag: addLover.receiver,
       };
       try {
-        console.log(addLover);
         const response = await axios.post("/api/users/matchrequest", data);
         if (response.status === 200) {
           setError(false);
           setErrorMsg("");
           setMainError(false);
           setMainErrorMsg("");
-          router.refresh;
+          router.refresh();
         }
       } catch (error: any) {
         if (error.response) {
@@ -77,7 +78,7 @@ const Home = () => {
       }
     }
   };
-
+  console.log(session);
   return (
     <div className="ContentContainer">
       <UserAvatar />
@@ -102,6 +103,9 @@ const Home = () => {
         <button onClick={AddLover}>Add</button>
         {mainError && <p className="mainErrorMsg">{mainErrorMsg}</p>}
         <LoverTag />
+        {session?.user?.request?.from && <p>{session.user.request.from}</p>}
+        {session?.user?.request?.to && <p>{session.user.request.to}</p>}
+        <UploadComponent />
       </div>
     </div>
   );
