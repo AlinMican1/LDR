@@ -19,7 +19,9 @@ export async function POST(request: NextRequest) {
     //Check to see if the sender or receiver already have a request.
     if (
       (receiver.request && receiver.request.from) ||
-      (sender.request && sender.request.to)
+      (sender.request && sender.request.to) ||
+      (receiver.request && receiver.request.to) ||
+      (sender.request && sender.request.from)
     ) {
       return NextResponse.json(
         { error: "There is already has an active request" },
@@ -38,8 +40,6 @@ export async function POST(request: NextRequest) {
       { new: true }
     );
 
-    console.log(updatedReceiver); // Logs the updated document
-
     return NextResponse.json(
       { message: "Friend request sent successfully!" },
       { status: 200 }
@@ -48,18 +48,38 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
 export async function GET(request: NextRequest) {
-  await connectToDB();
-  const { loverTag } = await request.json();
-  console.log("hi", loverTag);
-  const requestExists = await User.findOne({ loverTag });
   try {
-    if (requestExists.request && requestExists.request.to) {
+    // Connect to the database
+    await connectToDB();
+
+    // Attempt to parse the request body
+    const body = await request.json().catch(() => null);
+    console.log(body);
+    if (!body || !body.loverTag) {
+      return NextResponse.json(
+        { message: "Invalid or missing loverTag in request body" },
+        { status: 400 }
+      );
+    }
+
+    const { loverTag } = body;
+
+    // Check if the user with the given loverTag exists in the database
+    const requestExists = await User.findOne({ loverTag });
+
+    // Handle different cases
+    if (requestExists && requestExists.request && requestExists.request.to) {
       return NextResponse.json({ message: "To given" }, { status: 200 });
     } else {
       return NextResponse.json({ message: "From given" }, { status: 200 });
     }
   } catch (error) {
-    return NextResponse.json({ message: "From given" }, { status: 500 });
+    console.error("Error occurred:", error);
+    return NextResponse.json(
+      { message: "Server error occurred" },
+      { status: 500 }
+    );
   }
 }
