@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import UploadComponent from "../atoms/uploadAvatar";
+import Request from "../atoms/request";
 
 const Home = () => {
   const { data: session } = useSession();
@@ -78,7 +79,7 @@ const Home = () => {
       }
     }
   };
-  console.log(session);
+
   return (
     <div className="ContentContainer">
       <UserAvatar />
@@ -105,7 +106,8 @@ const Home = () => {
         <LoverTag />
         {session?.user?.request?.from && <p>{session.user.request.from}</p>}
         {session?.user?.request?.to && <p>{session.user.request.to}</p>}
-        <UploadComponent />
+        {/* <UploadComponent /> */}
+        <Request />
       </div>
     </div>
   );

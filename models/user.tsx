@@ -30,6 +30,7 @@ const UserSchema = new mongoose.Schema({
   loverTag: {
     type: String,
     unique: true,
+    required: true,
   },
   request: {
     from: {
