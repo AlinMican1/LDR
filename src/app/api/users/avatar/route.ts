@@ -82,11 +82,3 @@ export async function GET(request: NextRequest) {
   const user = await User.findOne({ email });
   return NextResponse.json({ message: "User found", user });
 }
-export async function GetImage(key: string) {
-  const input = {
-    Bucket: bucketName,
-    Key: "key",
-  };
-  const command = new GetObjectCommand(input);
-  const reponse = await s3.send(command);
-}

@@ -14,12 +14,12 @@ const UserAvatar = () => {
       if (session?.user?.email) {
         try {
           const userResponse = await axios.get(
-            `/api/users/${session.user.email}`
+            `/api/users/avatar/${session.user.email}`
           );
-          const { image } = userResponse.data;
+          const { avatarURL } = userResponse.data;
 
-          if (image) {
-            setAvatarUrl(image);
+          if (avatarURL) {
+            setAvatarUrl(avatarURL);
           }
         } catch (error) {
           console.error("Error fetching user avatar:", error);
@@ -41,7 +41,6 @@ const UserAvatar = () => {
 
   return (
     <div>
-      <p>{avatarPic}</p>
       {avatarPic ? (
         <Image
           className="avatarImage"

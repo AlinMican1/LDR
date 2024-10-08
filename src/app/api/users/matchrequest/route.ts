@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   // Establish connection
   await connectToDB();
   const { senderLoverTag, receiverLoverTag } = await request.json();
-  console.log(senderLoverTag, receiverLoverTag);
+
   try {
     // Find the users by their loverTags
     const sender = await User.findOne({ loverTag: senderLoverTag });
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 
     // Attempt to parse the request body
     const body = await request.json().catch(() => null);
-    console.log(body);
+
     if (!body || !body.loverTag) {
       return NextResponse.json(
         { message: "Invalid or missing loverTag in request body" },
