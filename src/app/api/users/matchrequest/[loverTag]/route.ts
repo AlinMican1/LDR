@@ -15,7 +15,9 @@ export async function GET(
   }
   try {
     await connectToDB();
-    const user = await User.findOne({ loverTag });
+    const user = await User.findOne({ loverTag })
+      .populate("request.from", "username avatarURL")
+      .populate("request.to", "username avatarURL");
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
