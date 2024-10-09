@@ -104,8 +104,7 @@ const Home = () => {
         <button onClick={AddLover}>Add</button>
         {mainError && <p className="mainErrorMsg">{mainErrorMsg}</p>}
         <LoverTag />
-        {session?.user?.request?.from && <p>{session.user.request.from}</p>}
-        {session?.user?.request?.to && <p>{session.user.request.to}</p>}
+
         {/* <UploadComponent /> */}
         <Request />
       </div>

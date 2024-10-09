@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const Request = () => {
   const { data: session } = useSession();
   const [requestData, setRequestData] = useState("");
   const [deliver, setDeliver] = useState("");
-
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
   useEffect(() => {
     const fetchAvatar = async () => {
       if (session?.user?.email) {
@@ -17,12 +19,17 @@ const Request = () => {
             )}`
           );
           const { request } = userResponse.data;
+          console.log(request);
           if (request.to) {
             setRequestData(request.to);
             setDeliver("To:");
+            setName(request.to.username);
+            setAvatar(request.to.avatarURL);
           } else {
-            setRequestData(request.from);
+            setRequestData(request.from); // Save the full user object for 'from'
             setDeliver("From:");
+            setName(request.from.username); // Extract the username
+            setAvatar(request.from.avatarURL);
           }
         } catch (error) {
           console.error("Error fetching user requests:", error);
@@ -33,10 +40,6 @@ const Request = () => {
     // Only fetch the avatar if it’s not already in the session
 
     fetchAvatar();
-
-    // else {
-    //   setAvatarUrl(session.user.avatarURL);
-    // }
   }, [session]);
 
   return (
@@ -46,17 +49,13 @@ const Request = () => {
       {requestData ? (
         <div>
           <p>
-            <strong>{deliver}</strong> {requestData}
+            <strong>{deliver}</strong>
           </p>
-          {/* <p>
-            <strong>To:</strong> {requestData}
-          </p>
-          <p>
-            <strong>Status:</strong> {requestData}
-          </p> */}
+          <p>{name}</p>
+          <Image src={avatar} width={200} height={200} alt="hi" />
         </div>
       ) : (
-        <p>Loading request data...</p>
+        <p>No Request Yet!</p>
       )}
     </div>
   );
