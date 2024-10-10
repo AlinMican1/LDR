@@ -36,13 +36,13 @@ const UserSchema = new mongoose.Schema({
     from: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
       default: null,
     },
     to: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
       default: null,
     },
     status: {
