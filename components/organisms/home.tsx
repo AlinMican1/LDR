@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import UploadComponent from "../atoms/uploadAvatar";
-import Request from "../atoms/request";
+import Request from "../molecules/request";
 
 const Home = () => {
   const { data: session } = useSession();
@@ -57,7 +57,7 @@ const Home = () => {
           setErrorMsg("");
           setMainError(false);
           setMainErrorMsg("");
-          router.refresh();
+          window.location.reload();
         }
       } catch (error: any) {
         if (error.response) {

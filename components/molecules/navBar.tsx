@@ -20,7 +20,7 @@ const NavBar = () => {
     // Add more routes as needed
   }, [path]); // This useEffect runs every time the path changes
 
-  if (path === "/login") {
+  if (path === "/login" || path === "/register") {
     return null; // Do not render the NavBar on login or register routes
   }
 

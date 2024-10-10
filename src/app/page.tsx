@@ -1,6 +1,6 @@
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Home from "@/components/molecules/home";
+import Home from "@/components/organisms/home";
 
 // Fetch session on the server side
 export default function HomePage() {

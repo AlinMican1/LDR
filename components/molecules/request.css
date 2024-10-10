@@ -1,0 +1,6 @@
+.avatarFriend {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 25vw;
+  height: 25vw;
+}
