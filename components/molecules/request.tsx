@@ -3,19 +3,26 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import "./request.css";
+import { AcceptLoverRequestButton } from "../atoms/customButton";
+
+interface UserRequest {
+  _id: string;
+  username: string;
+  avatarURL: string;
+}
 
 const Request = () => {
   const { data: session } = useSession();
-  const [requestData, setRequestData] = useState("");
+  const [requestData, setRequestData] = useState<UserRequest | null>(null);
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [avatar, setAvatar] = useState("");
   //Set the according buttons
-
+  const [test, setTest] = useState("");
   const [accept, setAccept] = useState(false);
 
   useEffect(() => {
-    const fetchAvatar = async () => {
+    const fetchRequest = async () => {
       if (session?.user?.email) {
         try {
           const userResponse = await axios.get(
@@ -24,18 +31,20 @@ const Request = () => {
             )}`
           );
           const { request } = userResponse.data;
-          console.log(request);
+          if (!request) {
+            return;
+          }
           if (request.to) {
             setRequestData(request.to);
-
-            setName(request.to.username);
-            setAvatar(request.to.avatarURL);
+            setName(request.to?.username || ""); // Check for undefined
+            setAvatar(request.to?.avatarURL || ""); // Check for undefined
             setTitle("Match Sent!");
-          } else {
+          } else if (request.from) {
+            // Add a check for `request.from`
             setRequestData(request.from); // Save the full user object for 'from'
             setAccept(true);
-            setName(request.from.username); // Extract the username
-            setAvatar(request.from.avatarURL);
+            setName(request.from?.username || ""); // Check for undefined
+            setAvatar(request.from?.avatarURL || ""); // Check for undefined
             setTitle("Match Received!");
           }
         } catch (error) {
@@ -46,16 +55,17 @@ const Request = () => {
 
     // Only fetch the avatar if it’s not already in the session
 
-    fetchAvatar();
+    fetchRequest();
   }, [session]);
 
   return (
     <div>
       {/* <h1>Match Request Data</h1> */}
       {/* Render the request data if it exists */}
-      {requestData ? (
+      {requestData && session ? (
         <div className="subContentContainerColumn">
           <h1>{title}</h1>
+
           <Image
             className="avatarFriend"
             src={avatar}
@@ -65,10 +75,12 @@ const Request = () => {
           />
 
           <p>{name}</p>
+          <p>{test}</p>
           <div>
             {accept ? (
               <div className="subContentContainerRow">
-                <p>Reject</p> <p>Accept</p>
+                {/* <p>Reject</p> <p>{requestData._id}</p> */}
+                <AcceptLoverRequestButton senderId={requestData._id} />
               </div>
             ) : (
               <p>Cancel Request</p>
