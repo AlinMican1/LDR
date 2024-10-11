@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDB from "@/lib/database";
 import User from "@/models/user";
+import { send } from "process";
 
 export async function GET(
   request: NextRequest,

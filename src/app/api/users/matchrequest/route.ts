@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
 import connectToDB from "@/lib/database";
-import { stringify } from "querystring";
 
 export async function POST(request: NextRequest) {
   // Establish connection
@@ -28,7 +27,15 @@ export async function POST(request: NextRequest) {
         { status: 403 } // Forbidden
       );
     }
-
+    if (
+      sender.request.status === "accepted" &&
+      receiver.request.status === "accepted"
+    ) {
+      return NextResponse.json(
+        { message: " Sorry this person is already taken!" },
+        { status: 403 }
+      );
+    }
     const updatedReceiver = await User.findOneAndUpdate(
       { loverTag: receiverLoverTag },
       { $set: { request: { from: sender._id, status: "pending" } } },
@@ -49,36 +56,89 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+// export async function GET(request: NextRequest) {
+//   try {
+//     // Connect to the database
+//     await connectToDB();
+
+//     // Attempt to parse the request body
+//     const body = await request.json().catch(() => null);
+
+//     if (!body || !body.loverTag) {
+//       return NextResponse.json(
+//         { message: "Invalid or missing loverTag in request body" },
+//         { status: 400 }
+//       );
+//     }
+
+//     const { loverTag } = body;
+
+//     // Check if the user with the given loverTag exists in the database
+//     const requestExists = await User.findOne({ loverTag });
+
+//     // Handle different cases
+//     if (requestExists && requestExists.request && requestExists.request.to) {
+//       return NextResponse.json({ message: "To given" }, { status: 200 });
+//     } else {
+//       return NextResponse.json({ message: "From given" }, { status: 200 });
+//     }
+//   } catch (error) {
+//     console.error("Error occurred:", error);
+//     return NextResponse.json(
+//       { message: "Server error occurred" },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+export async function PUT(request: NextRequest) {
+  await connectToDB();
+  const { senderId } = await request.json();
+
   try {
-    // Connect to the database
-    await connectToDB();
-
-    // Attempt to parse the request body
-    const body = await request.json().catch(() => null);
-
-    if (!body || !body.loverTag) {
+    if (!senderId) {
       return NextResponse.json(
-        { message: "Invalid or missing loverTag in request body" },
-        { status: 400 }
+        { message: "There is no request by sender yet" },
+        { status: 404 }
+      );
+    }
+    const sender = await User.findOne({ _id: senderId });
+
+    if (!sender) {
+      return NextResponse.json(
+        { message: "sender not found" },
+        { status: 404 }
       );
     }
 
-    const { loverTag } = body;
-
-    // Check if the user with the given loverTag exists in the database
-    const requestExists = await User.findOne({ loverTag });
-
-    // Handle different cases
-    if (requestExists && requestExists.request && requestExists.request.to) {
-      return NextResponse.json({ message: "To given" }, { status: 200 });
-    } else {
-      return NextResponse.json({ message: "From given" }, { status: 200 });
+    const receiver = await User.findOne({ _id: sender.request.to });
+    if (!receiver) {
+      return NextResponse.json(
+        { message: "receiver not found" },
+        { status: 404 }
+      );
     }
-  } catch (error) {
-    console.error("Error occurred:", error);
+
+    receiver.request.from = null;
+    receiver.request.to = null;
+    receiver.request.status = "accepted";
+    receiver.lover = sender._id;
+
+    sender.request.to = null;
+    sender.request.from = null;
+    sender.request.status = "accepted";
+    sender.lover = receiver._id;
+
+    await sender.save();
+    await receiver.save();
+
     return NextResponse.json(
-      { message: "Server error occurred" },
+      { message: "Lover request accepted successfully" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Internal server error" },
       { status: 500 }
     );
   }

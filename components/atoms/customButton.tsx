@@ -5,6 +5,7 @@ import "./customButton.css";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 interface NavBarButtonProps {
   icon?: any;
@@ -54,4 +55,35 @@ export function LogOutButton() {
       </button>
     </div>
   );
+}
+
+interface AcceptLoverRequestProps {
+  senderId: string;
+}
+
+export function AcceptLoverRequestButton({
+  senderId,
+}: AcceptLoverRequestProps) {
+  const router = useRouter();
+  const acceptRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.put("/api/users/matchrequest", {
+        senderId: senderId,
+      });
+      if (response.status === 200) {
+        router.refresh();
+      }
+    } catch (error: any) {}
+  };
+  return <button onClick={acceptRequest}>Accept</button>;
+}
+
+interface RejectLoverRequestProps {
+  name: string; // Prop to handle click
+}
+
+export function RejectLoverRequestButton({ name }: RejectLoverRequestProps) {
+  return {};
 }
