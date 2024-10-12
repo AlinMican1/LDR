@@ -36,7 +36,20 @@ export function NavBarButton({
     </div>
   );
 }
+interface IconButtonProps {
+  icon: any;
+  onclick?: () => void;
+}
 
+export function IconButton({ icon, onclick }: IconButtonProps) {
+  return (
+    <div>
+      <button className="iconButton" onClick={onclick}>
+        {icon && <FontAwesomeIcon icon={icon} />}
+      </button>
+    </div>
+  );
+}
 export function LogOutButton() {
   const router = useRouter();
 
@@ -64,7 +77,6 @@ interface AcceptLoverRequestProps {
 export function AcceptLoverRequestButton({
   senderId,
 }: AcceptLoverRequestProps) {
-  const router = useRouter();
   const acceptRequest = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -73,17 +85,43 @@ export function AcceptLoverRequestButton({
         senderId: senderId,
       });
       if (response.status === 200) {
-        router.refresh();
+        //Refresh page
       }
     } catch (error: any) {}
   };
-  return <button onClick={acceptRequest}>Accept</button>;
+  return (
+    <button className="acceptButton" onClick={acceptRequest}>
+      Accept
+    </button>
+  );
 }
 
 interface RejectLoverRequestProps {
-  name: string; // Prop to handle click
+  name: string;
+  loverTag: string;
 }
 
-export function RejectLoverRequestButton({ name }: RejectLoverRequestProps) {
-  return {};
+export function RejectLoverRequestButton({
+  name,
+  loverTag,
+}: RejectLoverRequestProps) {
+  const acceptRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.delete(
+        `/api/users/matchrequest/${encodeURIComponent(loverTag)}`
+      );
+      if (response.status === 200) {
+        //Refresh page
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+  return (
+    <button className="rejectButton" onClick={acceptRequest}>
+      {name}
+    </button>
+  );
 }

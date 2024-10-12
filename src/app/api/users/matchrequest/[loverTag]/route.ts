@@ -42,6 +42,7 @@ export async function DELETE(
   { params }: { params: { loverTag: string } }
 ) {
   const { loverTag } = params;
+
   if (!loverTag) {
     return NextResponse.json(
       { error: "loverTag is required" },
@@ -60,8 +61,14 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    const lover = await User.findById({ _id: user.request.to });
+    let lover;
+    if (!user.request.from) {
+      lover = await User.findById({ _id: user.request.to });
+    } else if (!user.request.to) {
+      lover = await User.findById({ _id: user.request.from });
+    }
 
+    console.log(lover);
     user.request.from = null;
     user.request.to = null;
     user.request.status = "pending";

@@ -1,12 +1,12 @@
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Home from "@/components/organisms/home";
+import HomeLocked from "@/components/organisms/homeLocked";
 
 // Fetch session on the server side
 export default function HomePage() {
   return (
     <div>
-      <Home />
+      <HomeLocked />
     </div>
   );
   // // Safely access username or fallback
