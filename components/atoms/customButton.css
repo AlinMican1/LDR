@@ -18,3 +18,29 @@
 .symbolAndTextSpace {
   margin-left: 10px;
 }
+
+.acceptButton {
+  background-color: transparent;
+  border-radius: 40px;
+  font-size: 20px;
+  padding: 10px 40px 10px 40px;
+  border: 1px solid;
+  color: rgb(167, 104, 226);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin: 10px;
+}
+
+.rejectButton {
+  background-color: transparent;
+  border: 0px;
+  color: grey;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.iconButton {
+  background-color: transparent;
+  color: black;
+  border: 0px;
+  font-size: 20px;
+}

@@ -87,8 +87,9 @@ a {
   display: flex;
   flex-direction: row;
   border-radius: 20px;
-  justify-content: center;
-  gap: 90px;
+  justify-content: space-between;
+  width: 80vw;
+  margin-top: 10px;
 }
 
 @media (prefers-color-scheme: dark) {

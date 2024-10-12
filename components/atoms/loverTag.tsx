@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
 import { useSession } from "next-auth/react";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "./loverTag.css";
 const LoverTag = () => {
   const { data: session } = useSession();
   const [textToCopy, setTextToCopy] = useState(""); // The text you want to copy
@@ -14,14 +16,20 @@ const LoverTag = () => {
   };
   return (
     <div>
-      <p>{session?.user.loverTag}</p>
-      <CopyToClipboard
-        text={session?.user.loverTag as string}
-        onCopy={onCopyText}
-      >
-        <button>Copy to Clipboard</button>
-      </CopyToClipboard>
-      {copyStatus && <p>Text copied to clipboard!</p>}
+      <div className="subContentContainerRow">
+        <div className="tagDisplay">
+          <h3>{session?.user.loverTag}</h3>
+        </div>
+        <CopyToClipboard
+          text={session?.user.loverTag as string}
+          onCopy={onCopyText}
+        >
+          <button className="copyTextButton">
+            <FontAwesomeIcon icon={faCopy} />
+          </button>
+        </CopyToClipboard>
+      </div>
+      {copyStatus && <p className="copiedText">Tag Copied!</p>}
     </div>
   );
 };
