@@ -1,6 +1,6 @@
 "use client";
 import "./navBar.css";
-import CustomButton from "../atoms/customButton";
+import { NavBarButton } from "../atoms/customButton";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
@@ -20,30 +20,24 @@ const NavBar = () => {
     // Add more routes as needed
   }, [path]); // This useEffect runs every time the path changes
 
-  if (path === "/login") {
+  if (path === "/login" || path === "/register") {
     return null; // Do not render the NavBar on login or register routes
   }
 
-  // Update the active button and store the value in local storage
-  // const handleButtonClick = (buttonName: string) => {
-  //   setActiveButton(buttonName);
-  //   localStorage.setItem("activeButton", buttonName); // Store the active button state in local storage
-  // };
-
   return (
     <div className="navbarContainer">
-      <CustomButton
+      <NavBarButton
         link="/"
         icon={faHome}
         isActive={activeButton === "home"}
         onClick={() => setActiveButton("home")}
-      ></CustomButton>
-      <CustomButton
-        link="/register"
+      ></NavBarButton>
+      <NavBarButton
+        link="/settings"
         icon={faBars}
-        isActive={activeButton === "register"} // Check if this button is active
-        onClick={() => setActiveButton("register")}
-      ></CustomButton>
+        isActive={activeButton === "settings"} // Check if this button is active
+        onClick={() => setActiveButton("settings")}
+      ></NavBarButton>
     </div>
   );
 };

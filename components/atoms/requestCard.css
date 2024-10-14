@@ -1,0 +1,19 @@
+.requestCard {
+  width: 80vw;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  background-color: aquamarine;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin-top: 20px;
+}
+
+.requestCard p {
+  font-size: 15px;
+  color: grey;
+}
