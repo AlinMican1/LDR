@@ -1,0 +1,7 @@
+.avatarLover {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 25vw;
+  height: 25vw;
+  box-shadow: rgb(102, 39, 97) 0px 3px 8px;
+}

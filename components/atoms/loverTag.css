@@ -1,0 +1,22 @@
+.copyTextButton {
+  background-color: rgb(204, 75, 189);
+  color: rgb(0, 0, 0);
+  border: 0px;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.tagDisplay {
+  background-color: pink;
+  width: auto;
+  height: auto;
+  padding: 10px 15vw 10px 15vw;
+  border-radius: 10px;
+}
+.tagDisplay h3 {
+  font-style: italic;
+}
+.copiedText {
+  margin: 5px;
+  color: gray;
+}

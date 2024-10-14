@@ -70,6 +70,27 @@ a {
   align-items: center;
   text-align: center;
 }
+.subContentContainerColumn {
+  width: 80vw;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  background-color: aquamarine;
+}
+
+.subContentContainerRow {
+  display: flex;
+  flex-direction: row;
+  border-radius: 20px;
+  justify-content: space-between;
+  width: 80vw;
+  margin-top: 10px;
+}
 
 @media (prefers-color-scheme: dark) {
   html {
