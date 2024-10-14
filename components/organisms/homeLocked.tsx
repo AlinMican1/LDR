@@ -17,14 +17,13 @@ const HomeLocked = () => {
     sender: "",
     receiver: "",
   });
-  useEffect(() => {
-    if (session?.user?.loverTag) {
-      setAddLover((prev) => ({
-        ...prev,
-        sender: session.user.loverTag,
-      }));
-    }
-  }, [session]);
+
+  // Loading state for the request
+  const [loading, setLoading] = useState(true);
+  // Add a delay state to simulate waiting for the data
+  const [delayOver, setDelayOver] = useState(false);
+
+  // Error states
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [mainError, setMainError] = useState(false);
@@ -43,7 +42,7 @@ const HomeLocked = () => {
       setErrorMsg("");
       addLoverError = false;
     }
-    if (addLoverError === false) {
+    if (!addLoverError) {
       const data = {
         senderLoverTag: addLover.sender,
         receiverLoverTag: addLover.receiver,
@@ -64,13 +63,11 @@ const HomeLocked = () => {
           if (status === 403) {
             setMainError(true);
             setMainErrorMsg("The user already has an active request");
-          }
-          if (status === 404) {
+          } else if (status === 404) {
             setError(true);
             setErrorMsg("The user does not exist!");
           }
         } else {
-          // Handle any other errors
           setMainError(true);
           setMainErrorMsg("An unexpected error occurred");
         }
@@ -79,23 +76,43 @@ const HomeLocked = () => {
   };
 
   const { requestData } = useFetchRequest();
-  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (requestData) {
-      setLoading(false); // Set loading to false once data is fetched
+    if (session?.user?.loverTag) {
+      setAddLover((prev) => ({
+        ...prev,
+        sender: session.user.loverTag,
+      }));
+    }
+  }, [session]);
+
+  // Simulate a delay (e.g., 1 second) before rendering
+  useEffect(() => {
+    const fetchTimeout = setTimeout(() => {
+      setDelayOver(true); // Delay is over after 1 second
+    }, 1000); // 1 second delay
+
+    return () => clearTimeout(fetchTimeout); // Cleanup timeout if the component unmounts
+  }, []);
+
+  // Update loading state based on requestData fetch
+  useEffect(() => {
+    if (requestData !== undefined) {
+      setLoading(false); // Stop loading when requestData is fetched
     }
   }, [requestData]);
+
+  // Render content conditionally based on loading, delay, and requestData
   return (
     <div className="ContentContainer">
       <UserAvatar />
 
       <div className="subContentContainer">
         <h2>Features are locked!</h2>
-        <p>
-          To unlock the app to it's full extend add your significant other!{" "}
-        </p>
-        {loading ? ( // Show loading indicator until data is fetched
-          <div>Loading...</div>
+        <p>To unlock the app to its full extent, add your significant other!</p>
+
+        {loading || !delayOver ? (
+          <p>Loading...</p> // Show a loading state until delay is over and requestData is fetched
         ) : requestData ? (
           <Request />
         ) : (
