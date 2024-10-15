@@ -2,3 +2,15 @@ RUN CAPACITOR
 npm run build
 npx cap sync
 npx cap open android
+
+
+Please don't do this. Databases are not particularly well suited to storing large bits of data like images, files, etc.
+
+Instead: you should store your images in a dedicated static file store like Amazon S3, then store a LINK to that image in your MongoDB record.
+
+This is a lot better in terms of general performance and function because:
+
+It will reduce your database hosting costs (it is cheaper to store large files in S3 or other file services than in a database).
+It will improve database query performance: DBs are fast at querying small pieces of data, but bad at returning large volumes of data (like files).
+It will make your site or application much faster: instead of needing to query the DB for your image when you need it, you can simply output the image link and it will be rendered immediately.
+Overall: it is a much better / safer / faster strategy. 

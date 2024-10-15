@@ -9,7 +9,9 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import Request from "../molecules/request";
-import { useFetchRequest } from "@/lib/userFetchRequest";
+import { userFetchRequest } from "@/lib/userFetchRequest";
+import MatchAvatar from "../atoms/matchAvatar";
+import UploadComponent from "../atoms/uploadAvatar";
 
 const HomeLocked = () => {
   const { data: session } = useSession();
@@ -75,7 +77,7 @@ const HomeLocked = () => {
     }
   };
 
-  const { requestData } = useFetchRequest();
+  const { requestData } = userFetchRequest();
 
   useEffect(() => {
     if (session?.user?.loverTag) {
@@ -106,7 +108,7 @@ const HomeLocked = () => {
   return (
     <div className="ContentContainer">
       <UserAvatar />
-
+      <UploadComponent />
       <div className="subContentContainer">
         <h2>Features are locked!</h2>
         <p>To unlock the app to its full extent, add your significant other!</p>
