@@ -1,11 +1,82 @@
 .avatarImage {
   object-fit: cover;
   border-radius: 50%;
-  width: 10vw;
-  height: 10vw;
+  width: 13vw;
+  height: 13vw;
+  border: 1px solid;
+  border-color: black;
+  object-fit: cover;
 }
-.test {
-  border-radius: 100%;
-  border: 0px;
-  background-color: transparent;
+.avatarsContainer {
+  box-sizing: content-box;
+  width: min-content;
+  display: flex;
+  flex-direction: row;
+  height: auto;
+
+  position: relative;
+}
+.loverAvatar {
+  position: absolute;
+  left: 11vw;
+}
+.heart {
+  /* Space around the box */
+  position: absolute;
+  bottom: 0;
+  font-size: 4vw;
+  left: 9.8vw;
+  color: red;
+  padding: 0;
+  height: 4vw;
+  -webkit-animation: breathing 5s ease-out infinite normal;
+  animation: breathing 5s ease-out infinite normal;
+}
+
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
 }

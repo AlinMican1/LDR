@@ -47,14 +47,13 @@ export const authOptions: NextAuthOptions = {
           avatarURL: userExist.avatarURL,
           id: userExist._id,
           loverTag: userExist.loverTag,
-          request: userExist.request,
+          // request: userExist.request,
         };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      console.log(user);
       if (user) {
         return {
           ...token,
@@ -62,7 +61,7 @@ export const authOptions: NextAuthOptions = {
           isAdmin: user.isAdmin,
           avatarURL: user.avatarURL,
           loverTag: user.loverTag,
-          request: user.request,
+          // request: user.request,
         };
       }
       return token;
@@ -76,7 +75,7 @@ export const authOptions: NextAuthOptions = {
           isAdmin: token.isAdmin,
           avatarURL: token.avatarURL,
           loverTag: token.loverTag,
-          request: token.request,
+          // request: token.request,
         },
       };
     },

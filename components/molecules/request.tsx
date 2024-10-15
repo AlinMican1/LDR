@@ -8,15 +8,10 @@ import {
   RejectLoverRequestButton,
 } from "../atoms/customButton";
 import RequestCard from "../atoms/requestCard";
-import { useFetchRequest } from "@/lib/userFetchRequest";
-interface UserRequest {
-  _id: string;
-  username: string;
-  avatarURL: string;
-}
+import { userFetchRequest } from "@/lib/userFetchRequest";
 
 const Request = () => {
-  const { requestData, name, title, avatar, accept } = useFetchRequest();
+  const { requestData, name, title, avatar, accept } = userFetchRequest();
   const { data: session } = useSession();
   return (
     <div>

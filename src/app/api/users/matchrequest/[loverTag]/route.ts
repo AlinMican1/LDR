@@ -68,7 +68,6 @@ export async function DELETE(
       lover = await User.findById({ _id: user.request.from });
     }
 
-    console.log(lover);
     user.request.from = null;
     user.request.to = null;
     user.request.status = "pending";

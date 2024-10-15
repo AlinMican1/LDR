@@ -8,7 +8,7 @@ interface UserRequest {
   avatarURL: string;
 }
 
-interface UseFetchRequestResult {
+interface UserFetchRequestResult {
   requestData: UserRequest | null;
   name: string;
   title: string;
@@ -17,7 +17,7 @@ interface UseFetchRequestResult {
   error: string | null;
 }
 
-export const useFetchRequest = (): UseFetchRequestResult => {
+export const userFetchRequest = (): UserFetchRequestResult => {
   const { data: session } = useSession();
   const [requestData, setRequestData] = useState<UserRequest | null>(null);
   const [name, setName] = useState("");
@@ -28,26 +28,29 @@ export const useFetchRequest = (): UseFetchRequestResult => {
 
   useEffect(() => {
     const fetchRequest = async () => {
-      if (session?.user?.loverTag) {
+      if (session?.user?.email) {
         try {
           const userResponse = await axios.get(
-            `/api/users/matchrequest/${encodeURIComponent(
-              session.user.loverTag
-            )}`
+            `/api/users/${session.user.email}`
           );
-          const { request } = userResponse.data;
-          if (!request) return;
+          //   `/api/users/matchrequest/${encodeURIComponent(
+          //     session.user.loverTag
+          //   )}`
+          // );
+          const { user } = userResponse.data;
 
-          if (request.to) {
-            setRequestData(request.to);
-            setName(request.to?.username || "");
-            setAvatar(request.to?.avatarURL || "");
+          if (!user.request) return;
+
+          if (user.request.to) {
+            setRequestData(user.request.to);
+            setName(user.request.to?.username || "");
+            setAvatar(user.request.to?.avatarURL || "");
             setTitle("Match Sent!");
-          } else if (request.from) {
-            setRequestData(request.from);
+          } else if (user.request.from) {
+            setRequestData(user.request.from);
             setAccept(true);
-            setName(request.from?.username || "");
-            setAvatar(request.from?.avatarURL || "");
+            setName(user.request.from?.username || "");
+            setAvatar(user.request.from?.avatarURL || "");
             setTitle("Match Received!");
           }
         } catch (error) {
