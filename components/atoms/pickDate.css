@@ -1,0 +1,22 @@
+.dateContainer {
+  display: grid;
+  grid-template-columns: 20vw 20vw 20vw 20vw;
+  justify-content: center;
+}
+.dateButton {
+  margin: 5px;
+  height: 15vw;
+  background-color: blue;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: black;
+  border: 1px solid;
+  border-color: black;
+  border-radius: 5px;
+}
+.dateButton:active,
+.dateButton.active {
+  background-color: black; /* Active button background color */
+  color: white; /* Change text color for better visibility */
+}
