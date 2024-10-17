@@ -11,13 +11,13 @@ const PickDateParent = () => {
   const [confirmMonth, setConfirmMonth] = useState(false);
   const [confirmDay, setConfirmDay] = useState(false);
 
-  // Get session data here
   const { data: session } = useSession();
 
   const todayYear = new Date().getFullYear();
   const yearsArray = Array.from({ length: 8 }, (_, i) => todayYear + i);
 
   const todayMonth = new Date().getMonth();
+  const todayDay = new Date().getDate();
   const myMap = new Map<number, string>([
     [1, "Jan"],
     [2, "Feb"],
@@ -51,6 +51,7 @@ const PickDateParent = () => {
     : 30;
 
   let dayCount = 0;
+  let days = 1;
   if ((selectedMonth as string) === "Feb" && leapYear) {
     dayCount = 29;
   } else if ((selectedMonth as string) === "Feb" && !leapYear) {
@@ -58,8 +59,17 @@ const PickDateParent = () => {
   } else {
     dayCount = monthDayCount;
   }
-
-  for (let days = 1; days <= dayCount; days++) {
+  //doing todayMonth + 1 because date uses 0 index
+  if (
+    selectedMonth === myMap.get(todayMonth + 1) &&
+    todayYear === selectedYear
+  ) {
+    days = todayDay;
+    console.log("heelo");
+  }
+  console.log(todayDay);
+  console.log(myMap.get(todayMonth));
+  for (days; days <= dayCount; days++) {
     dayArray.push(days);
   }
 
@@ -67,24 +77,16 @@ const PickDateParent = () => {
     e.preventDefault();
     setConfirmDay(true);
 
-    // Create a Date object in local time
     const dateString = `${selectedYear}-${selectedMonth}-${selectedDay}`;
-    const date = new Date(dateString);
-    console.log(date);
-    // Convert to UTC string for saving to the database
-    const utcDateString = date.toISOString();
 
-    const test = {
-      date: utcDateString, // Send the date in UTC format
-      email: session?.user?.email, // Use the session variable here
+    const dateData = {
+      date: dateString,
+      email: session?.user?.email,
     };
 
     try {
-      const response = await axios.post("/api/users/meetdate", test);
-      console.log("Date added:", response.data); // Optional: handle response
-    } catch (error: any) {
-      console.error("Error adding date:", error); // Optional: handle error
-    }
+      const response = await axios.post("/api/users/meetdate", dateData);
+    } catch (error: any) {}
   };
 
   return (
