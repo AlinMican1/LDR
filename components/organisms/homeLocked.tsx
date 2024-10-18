@@ -12,6 +12,7 @@ import Request from "../molecules/request";
 import { userFetchRequest } from "@/lib/userFetchRequest";
 
 import PickDateParent from "../molecules/pickDateParent";
+import Modal from "../molecules/modal";
 
 const HomeLocked = () => {
   const { data: session } = useSession();
@@ -106,9 +107,7 @@ const HomeLocked = () => {
 
   // Render content conditionally based on loading, delay, and requestData
   return (
-    <div className="ContentContainer">
-      <UserAvatar />
-      <PickDateParent />
+    <div>
       <div className="subContentContainer">
         <h2>Features are locked!</h2>
         <p>To unlock the app to its full extent, add your significant other!</p>

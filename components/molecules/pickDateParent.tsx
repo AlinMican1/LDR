@@ -2,6 +2,9 @@ import { useState } from "react";
 import PickDate from "../atoms/pickDate";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { IconButton } from "../atoms/customButton";
 
 const PickDateParent = () => {
   const [selectedYear, setSelectedYear] = useState<number | string>("");
@@ -11,6 +14,7 @@ const PickDateParent = () => {
   const [confirmMonth, setConfirmMonth] = useState(false);
   const [confirmDay, setConfirmDay] = useState(false);
 
+  const router = useRouter();
   const { data: session } = useSession();
 
   const todayYear = new Date().getFullYear();
@@ -65,10 +69,8 @@ const PickDateParent = () => {
     todayYear === selectedYear
   ) {
     days = todayDay;
-    console.log("heelo");
   }
-  console.log(todayDay);
-  console.log(myMap.get(todayMonth));
+
   for (days; days <= dayCount; days++) {
     dayArray.push(days);
   }
@@ -86,39 +88,43 @@ const PickDateParent = () => {
 
     try {
       const response = await axios.post("/api/users/meetdate", dateData);
+      if (response.status == 200) {
+        // router.refresh();
+      }
     } catch (error: any) {}
   };
 
   return (
     <div>
-      <h1>Select Date</h1>
       {!confirmYear ? (
         <PickDate
-          name="year"
+          name="Year"
           array={yearsArray}
           value={selectedYear}
           onChange={setSelectedYear} // Update the selected year in parent state
         />
       ) : null}
       {selectedYear && !confirmYear ? (
-        <button onClick={() => setConfirmYear(true)}>Confirm Year</button>
-      ) : null}
+        <IconButton onclick={() => setConfirmYear(true)} icon={faCheck} />
+      ) : // <button onClick={() => setConfirmYear(true)}>Confirm Year</button>
+      null}
 
       {/* Pick Month (Only show after year is selected) */}
       {selectedYear && confirmYear && !confirmMonth ? (
         <PickDate
-          name="month"
+          name="Month"
           array={monthsArray}
           value={selectedMonth}
           onChange={setSelectedMonth} // Update the selected month in parent state
         />
       ) : null}
       {selectedMonth && !confirmMonth ? (
-        <button onClick={() => setConfirmMonth(true)}>Confirm Month</button>
-      ) : null}
+        <IconButton onclick={() => setConfirmMonth(true)} icon={faCheck} />
+      ) : // <button onClick={() => setConfirmMonth(true)}>Confirm Month</button>
+      null}
       {selectedMonth && confirmMonth && !confirmDay ? (
         <PickDate
-          name="day"
+          name="Day"
           array={dayArray}
           value={selectedDay}
           onChange={setSelectedDay} // Update the selected day in parent state
@@ -126,6 +132,9 @@ const PickDateParent = () => {
       ) : null}
       {selectedDay && !confirmDay ? (
         <button onClick={AddDate}>Confirm Date</button>
+      ) : null}
+      {confirmDay ? (
+        <h1 className="loadMessage"> LOADING PLEASE WAIT</h1>
       ) : null}
     </div>
   );
