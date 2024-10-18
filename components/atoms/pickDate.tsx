@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./pickDate.css";
 
 interface PickDateProps {
-  name: "year" | "month" | "day";
+  name: "Year" | "Month" | "Day";
   array: (number | string)[]; // Year or Month array
   value: string | number;
   onChange: (value: string | number) => void; // Function to update parent state
@@ -22,27 +22,22 @@ const PickDate: React.FC<PickDateProps> = ({
     setSelectedItem(item); // Set the selected item
     onChange(item); // Call the onChange function with the selected value
   };
+  const containerClass = name === "Day" ? "dateContainerDay" : "dateContainer";
   return (
-    <div className="dateContainer">
-      {/* <select value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">Select {name}</option>
+    <div>
+      <h1 className="selectDateTitle">Select {name} To Meet</h1>
+      <div className={containerClass}>
         {array.map((item, index) => (
-          <option key={index} value={item}>
+          <button
+            key={index}
+            className={`dateButton ${selectedItem === item ? "active" : ""}`} // Apply active class if selected
+            type="button" // Ensure the button type is set
+            onClick={() => handleClick(item)} // Handle button click
+          >
             {item}
-          </option>
+          </button>
         ))}
-      </select> */}
-
-      {array.map((item, index) => (
-        <button
-          key={index}
-          className={`dateButton ${selectedItem === item ? "active" : ""}`} // Apply active class if selected
-          type="button" // Ensure the button type is set
-          onClick={() => handleClick(item)} // Handle button click
-        >
-          {item}
-        </button>
-      ))}
+      </div>
     </div>
   );
 };

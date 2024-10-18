@@ -3,6 +3,11 @@
   grid-template-columns: 20vw 20vw 20vw 20vw;
   justify-content: center;
 }
+.dateContainerDay {
+  display: grid;
+  grid-template-columns: 12vw 12vw 12vw 12vw 12vw 12vw 12vw;
+  justify-content: center;
+}
 .dateButton {
   margin: 5px;
   height: 15vw;
@@ -19,4 +24,11 @@
 .dateButton.active {
   background-color: black; /* Active button background color */
   color: white; /* Change text color for better visibility */
+}
+
+.selectDateTitle {
+  justify-content: center;
+  display: flex;
+  margin: 20px;
+  font-size: 16px;
 }
