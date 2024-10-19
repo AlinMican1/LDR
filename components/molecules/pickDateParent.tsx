@@ -89,7 +89,7 @@ const PickDateParent = () => {
     try {
       const response = await axios.post("/api/users/meetdate", dateData);
       if (response.status == 200) {
-        // router.refresh();
+        router.refresh();
       }
     } catch (error: any) {}
   };
@@ -120,8 +120,7 @@ const PickDateParent = () => {
       ) : null}
       {selectedMonth && !confirmMonth ? (
         <IconButton onclick={() => setConfirmMonth(true)} icon={faCheck} />
-      ) : // <button onClick={() => setConfirmMonth(true)}>Confirm Month</button>
-      null}
+      ) : null}
       {selectedMonth && confirmMonth && !confirmDay ? (
         <PickDate
           name="Day"
@@ -131,8 +130,9 @@ const PickDateParent = () => {
         />
       ) : null}
       {selectedDay && !confirmDay ? (
-        <button onClick={AddDate}>Confirm Date</button>
-      ) : null}
+        <IconButton onclick={AddDate} icon={faCheck} />
+      ) : // <button onClick={AddDate}>Confirm Date</button>
+      null}
       {confirmDay ? (
         <h1 className="loadMessage"> LOADING PLEASE WAIT</h1>
       ) : null}

@@ -1,7 +1,7 @@
 import connectToDB from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
-import { DataRedundancy } from "@aws-sdk/client-s3";
+
 export async function POST(request: NextRequest) {
   const { date, email } = await request.json();
   await connectToDB();
