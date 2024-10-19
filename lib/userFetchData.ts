@@ -8,6 +8,7 @@ interface User {
   avatarURL: string;
   meetDate: string | null;
 }
+
 interface Lover {
   _id: string;
   username: string;
@@ -18,7 +19,7 @@ interface UserFetchDataResult {
   error: string | null;
   lover: Lover | null;
   user: User | null;
-  isLoading: boolean; // Add isLoading to return
+  isLoading: boolean;
 }
 
 export const userFetchData = (): UserFetchDataResult => {
@@ -26,44 +27,45 @@ export const userFetchData = (): UserFetchDataResult => {
   const [user, setUser] = useState<User | null>(null);
   const [lover, setLover] = useState<Lover | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRequest = async () => {
-      if (session?.user?.email) {
-        try {
-          const userResponse = await axios.get(
-            `/api/users/${session.user.email}`
-          );
-          const { user, lover: loverData } = userResponse.data;
-          if (user) {
-            setUser({
-              _id: user._id,
-              username: user.username,
-              avatarURL: user.avatarURL,
-              meetDate: user.meetDate,
-            });
-          }
-          if (loverData) {
-            setLover({
-              _id: loverData._id,
-              username: loverData.username,
-              avatarURL: loverData.avatarURL,
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching user requests:", error);
-          setError("Failed to fetch requests.");
-        } finally {
-          setIsLoading(false); // Set loading to false once done
+    const fetchUserData = async () => {
+      if (!session?.user?.email) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { data } = await axios.get(`/api/users/${session.user.email}`);
+        const { user, lover: loverData } = data;
+
+        if (user) {
+          setUser({
+            _id: user._id,
+            username: user.username,
+            avatarURL: user.avatarURL,
+            meetDate: user.meetDate,
+          });
         }
-      } else {
-        setIsLoading(false); // Also handle case where session is not available
+
+        if (loverData) {
+          setLover({
+            _id: loverData._id,
+            username: loverData.username,
+            avatarURL: loverData.avatarURL,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setError("Failed to fetch user data.");
+      } finally {
+        setIsLoading(false); // Set loading to false once data has been fetched
       }
     };
 
-    fetchRequest();
+    fetchUserData();
   }, [session]);
 
-  return { user, lover, error, isLoading }; // Return loading state
+  return { user, lover, error, isLoading };
 };

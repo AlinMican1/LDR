@@ -39,8 +39,12 @@
 }
 
 .iconButton {
-  background-color: turquoise;
-  color: black;
+  background-color: transparent;
+  color: rgb(14, 137, 22);
   border: 0px;
   font-size: 40px;
+  display: flex;
+  margin-left: calc((100% - 38px) / 2);
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

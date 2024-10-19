@@ -11,7 +11,7 @@ const HomeUnlocked = () => {
           <PickDateParent />
         </Modal>
       ) : (
-        <></>
+        <p>{user?.meetDate}</p>
       )}
     </div>
   );
