@@ -32,6 +32,10 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  meetDate: {
+    type: String,
+    default: null,
+  },
   request: {
     from: {
       type: mongoose.Schema.Types.ObjectId,

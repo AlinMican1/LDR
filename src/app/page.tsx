@@ -2,10 +2,15 @@
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import HomeLocked from "@/components/organisms/homeLocked";
+import Home from "@/components/template/home";
 
 // Fetch session on the server side
 export default function HomePage() {
-  return <HomeLocked />;
+  return (
+    <div>
+      <Home />
+    </div>
+  );
   // // Safely access username or fallback
   // const { data: session } = useSession();
 

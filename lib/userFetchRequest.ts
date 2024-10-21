@@ -33,10 +33,7 @@ export const userFetchRequest = (): UserFetchRequestResult => {
           const userResponse = await axios.get(
             `/api/users/${session.user.email}`
           );
-          //   `/api/users/matchrequest/${encodeURIComponent(
-          //     session.user.loverTag
-          //   )}`
-          // );
+
           const { user } = userResponse.data;
 
           if (!user.request) return;
