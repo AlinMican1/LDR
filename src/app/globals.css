@@ -34,7 +34,12 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
+.loadMessage {
+  justify-content: center;
+  font-size: large;
+  display: flex;
+  padding: 20px;
+}
 .mainErrorMsg {
   font-size: 3vw;
   color: red;

@@ -38,7 +38,7 @@ export function NavBarButton({
 }
 interface IconButtonProps {
   icon: any;
-  onclick?: () => void;
+  onclick?: (e: React.MouseEvent<HTMLButtonElement> | React.FormEvent) => void;
 }
 
 export function IconButton({ icon, onclick }: IconButtonProps) {
