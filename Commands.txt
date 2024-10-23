@@ -14,3 +14,17 @@ It will reduce your database hosting costs (it is cheaper to store large files i
 It will improve database query performance: DBs are fast at querying small pieces of data, but bad at returning large volumes of data (like files).
 It will make your site or application much faster: instead of needing to query the DB for your image when you need it, you can simply output the image link and it will be rendered immediately.
 Overall: it is a much better / safer / faster strategy. 
+
+
+OLD PACKAGE.JSON
+"scripts": {
+    //"dev": "next dev",
+    "dev": "node server.js",
+    "build": "next build",
+    //"start": "next start",
+    "start": "NODE_ENV=production node server.js",
+    "lint": "next lint"
+    
+   
+  },
+added "type": "module", in package.json no clue wtf is that
