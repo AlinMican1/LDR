@@ -60,6 +60,12 @@ const UserSchema = new mongoose.Schema({
     ref: "User",
     default: null,
   },
+  messages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+    },
+  ],
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,
