@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 
 import { useState } from "react";
-import Pusher from "pusher-js";
+import PusherClient from "@/lib/pusherClient";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import InputField from "@/components/atoms/inputField";
@@ -11,21 +11,26 @@ interface messageProps {
   senderImage: string | null;
   receiverImage: string | null;
   message: string;
+  username: string;
 }
+
 const Chat = () => {
   const [message, setMessage] = useState("");
   const [totalMessages, setTotalMessages] = useState<messageProps[]>([]);
-  var pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY as string, {
-    cluster: "eu",
-  });
 
-  var channel = pusher.subscribe("chat");
-  channel.bind("send-chat", function (data: any) {
-    const parsedMessage = JSON.parse(data.message);
-    setTotalMessages((prev) => [...prev, parsedMessage]);
-  });
+  useEffect(() => {
+    const channel = PusherClient.subscribe("chat");
+    channel.bind("send-chat", function (data: messageProps) {
+      // const parsedMessage = JSON.parse(data.message);
+      setTotalMessages((prev) => [...prev, data]);
+    });
+    return () => {
+      PusherClient.unsubscribe("chat");
+    };
+  }, []);
 
   const { data: session } = useSession();
+
   const messageData = {
     email: session?.user.email,
     message,
@@ -49,6 +54,7 @@ const Chat = () => {
           {/* Optionally show sender/receiver images */}
           {msg.senderImage && <img src={msg.senderImage} alt="Sender" />}
           {msg.receiverImage && <img src={msg.receiverImage} alt="Receiver" />}
+          <p>{msg.username}</p>
           <p>{msg.message}</p>
         </div>
       ))}

@@ -37,16 +37,16 @@ export async function POST(request: NextRequest) {
     const Pusher = require("pusher");
     const pusher = new Pusher({
       appId: process.env.PUSHER_APP_ID,
-      key: process.env.NEXT_PUBLIC_PUSHER_KEY,
+      key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
       secret: process.env.PUSHER_SECRET,
-      cluster: "eu",
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
       useTLS: true,
     });
-    console.log(sentMessage);
-    pusher.trigger("chat", "send-chat", {
-      messageSent: `${JSON.stringify(sentMessage.messageText)}\n\n`,
-    });
 
+    await pusher.trigger("chat", "send-chat", {
+      message,
+      username: user.username,
+    });
     return NextResponse.json({
       message: "Message created successfully",
       success: true,
