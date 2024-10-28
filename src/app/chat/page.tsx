@@ -6,6 +6,7 @@ import PusherClient from "@/lib/pusherClient";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import InputField from "@/components/atoms/inputField";
+import { MessageFetchData } from "@/lib/messageFetchData";
 
 interface messageProps {
   senderImage: string | null;
@@ -42,6 +43,12 @@ const Chat = () => {
       console.log(error);
     }
   };
+
+  //Testing
+  // const [oldmessage, setOldMessage] = useState();
+  // const { messages } = MessageFetchData();
+  // console.log(messages);
+
   return (
     <div>
       <input
