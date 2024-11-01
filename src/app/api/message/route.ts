@@ -1,17 +1,21 @@
+import connectToDB from "@/lib/database";
+import { pusherServer } from "@/lib/pusher";
 import Message from "@/models/message";
 import MessageRoom from "@/models/messageRoom";
 import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { email, message } = await request.json();
-  if (!email || !message) {
+  const { email, message, roomId } = await request.json();
+  console.log(roomId);
+  if (!email || !message || !roomId) {
     return NextResponse.json(
       { message: "no email or message given" },
       { status: 400 }
     );
   }
   try {
+    await connectToDB();
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
@@ -47,6 +51,7 @@ export async function POST(request: NextRequest) {
       if (!loverData.messageRooms) {
         loverData.messageRooms = []; // Initialize as an empty array if undefined
       }
+
       user.messageRooms.push(messageRoom._id);
       loverData.messageRooms.push(messageRoom._id);
       await user.save();
@@ -63,18 +68,11 @@ export async function POST(request: NextRequest) {
     messageRoom.messages.push(newMessage._id);
     await messageRoom.save();
 
-    const Pusher = require("pusher");
-    const pusher = new Pusher({
-      appId: process.env.PUSHER_APP_ID,
-      key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
-      secret: process.env.PUSHER_SECRET,
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
-      useTLS: true,
-    });
-
-    await pusher.trigger("chat", "send-chat", {
-      message,
-      username: user.username,
+    await pusherServer.trigger(roomId, "new-message", {
+      messageText: message,
+      sender: {
+        username: user.username,
+      },
     });
 
     return NextResponse.json(
