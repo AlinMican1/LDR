@@ -7,6 +7,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import InputField from "@/components/atoms/inputField";
 import { MessageFetchData } from "@/lib/messageFetchData";
+import MessageBox from "@/components/atoms/messageBox";
 
 interface MessageProps {
   messageText: string;
@@ -15,6 +16,7 @@ interface MessageProps {
   sender: {
     username: string;
     avatarURL: string | null;
+    _id: string;
   };
 }
 
@@ -26,21 +28,21 @@ const Chat = () => {
   const [totalMessages, setTotalMessages] = useState<TotalMessages>({
     messages: [],
   });
-  const roomId = "6724e10eb0cf5d4b9eebd037";
+
+  const roomId = "672ba95d35edcad4876800c0";
+  const { data: session } = useSession();
+
   const fetchInitialMessages = async () => {
-    const { username, avatar, messages } = await MessageFetchData(roomId);
-    const enrichedMessages = messages.map((msg: any) => ({
-      ...msg,
-      sender: {
-        username, // Assuming username is fetched for every message
-        avatarURL: avatar, // Assuming avatar is fetched for every message
-      },
-    }));
-    setTotalMessages({ messages: enrichedMessages });
+    if (!session?.user?.email) return;
+
+    const initialData = await MessageFetchData(roomId, session.user.email);
+    console.log(initialData.messages);
+    setTotalMessages({ messages: initialData.messages });
   };
+
   useEffect(() => {
     fetchInitialMessages();
-  }, [roomId]);
+  }, [session]);
   useEffect(() => {
     pusherClient.subscribe(roomId);
 
@@ -60,11 +62,10 @@ const Chat = () => {
     };
   }, []);
 
-  const { data: session } = useSession();
-
   const messageData = {
     email: session?.user.email,
     message,
+    roomId,
   };
   const sendMessage = async () => {
     try {
@@ -73,7 +74,7 @@ const Chat = () => {
       console.log(error);
     }
   };
-
+  let previousSenderId: any = null;
   return (
     <div>
       <input
@@ -82,15 +83,23 @@ const Chat = () => {
       ></input>
       <button onClick={sendMessage}>Send</button>
 
-      {totalMessages.messages.map((msg, index) => (
-        <div key={index}>
-          {/* Optionally show sender/receiver images */}
-          {/* {msg.senderImage && <img src={msg.senderImage} alt="Sender" />}
-          {msg.receiverImage && <img src={msg.receiverImage} alt="Receiver" />} */}
-          <p>{msg.sender.username}</p>
-          <p>{msg.messageText}</p>
-        </div>
-      ))}
+      {totalMessages.messages.map((msg, index) => {
+        // Determine if we should show profile info for the current message
+        const showProfileInfo = msg.sender._id !== previousSenderId;
+
+        const messageBox = (
+          <MessageBox
+            key={index}
+            message={msg}
+            currentUser_id={session?.user?.id}
+            showProfileInfo={showProfileInfo}
+          />
+        );
+
+        // Update previousSenderId to the current message's sender
+        previousSenderId = msg.sender._id;
+        return messageBox;
+      })}
     </div>
   );
 };
