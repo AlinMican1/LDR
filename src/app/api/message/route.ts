@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { email, message, roomId } = await request.json();
-  console.log(roomId);
+
   if (!email || !message || !roomId) {
     return NextResponse.json(
       { message: "no email or message given" },

@@ -1,0 +1,39 @@
+.Message-contents {
+  display: flex;
+  height: auto;
+  width: calc(100% - 20px);
+  margin-right: 10px;
+  margin-left: 10px;
+  background-color: aliceblue;
+  padding: 10px;
+}
+.Message-subcontents {
+  display: flex;
+}
+
+.Message-headings {
+  display: flex;
+  background-color: red;
+  width: 100%;
+  gap: 10px;
+  height: 20px;
+}
+
+.Message-headings h4 {
+  font-weight: bold;
+}
+.Message-headings p {
+  font-weight: 100;
+  font-size: 12px;
+  margin-top: 3px;
+}
+.Message-text {
+  display: column;
+  width: 100%;
+  background-color: rgb(98, 98, 143);
+}
+/* margin: 10px;
+padding: 20px;
+border-radius: 20px;
+width: calc(100% - 20px);
+background-color: aliceblue; */
