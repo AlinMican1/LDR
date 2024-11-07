@@ -14,13 +14,10 @@ const NavBar = () => {
       setActiveButton("home");
     } else if (path === "/settings") {
       setActiveButton("settings");
-    } else if (path === "/register") {
-      setActiveButton("register");
     }
-    // Add more routes as needed
   }, [path]); // This useEffect runs every time the path changes
 
-  if (path === "/login" || path === "/register") {
+  if (path === "/login" || path === "/register" || path === "/chat") {
     return null; // Do not render the NavBar on login or register routes
   }
 

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useState } from "react";
 import { pusherClient } from "@/lib/pusher";
@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import InputField from "@/components/atoms/inputField";
 import { MessageFetchData } from "@/lib/messageFetchData";
 import MessageBox from "@/components/atoms/messageBox";
+import Link from "next/link";
 
 interface MessageProps {
   messageText: string;
@@ -75,31 +76,43 @@ const Chat = () => {
     }
   };
   let previousSenderId: any = null;
+  const bottomChatRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [totalMessages]);
   return (
     <div>
+      <div>
+        <Link className="textLink" href={"/"}>
+          {" "}
+          GO TO DASHBOARD
+        </Link>
+      </div>
+      <div className="chatContainer">
+        {totalMessages.messages.map((msg, index) => {
+          // Determine if we should show profile info for the current message
+          const showProfileInfo = msg.sender._id !== previousSenderId;
+
+          const messageBox = (
+            <MessageBox
+              key={index}
+              message={msg}
+              currentUser_id={session?.user?.id}
+              showProfileInfo={showProfileInfo}
+            />
+          );
+
+          // Update previousSenderId to the current message's sender
+          previousSenderId = msg.sender._id;
+          return messageBox;
+        })}
+        <div ref={bottomChatRef} />
+      </div>
       <input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       ></input>
       <button onClick={sendMessage}>Send</button>
-
-      {totalMessages.messages.map((msg, index) => {
-        // Determine if we should show profile info for the current message
-        const showProfileInfo = msg.sender._id !== previousSenderId;
-
-        const messageBox = (
-          <MessageBox
-            key={index}
-            message={msg}
-            currentUser_id={session?.user?.id}
-            showProfileInfo={showProfileInfo}
-          />
-        );
-
-        // Update previousSenderId to the current message's sender
-        previousSenderId = msg.sender._id;
-        return messageBox;
-      })}
     </div>
   );
 };
