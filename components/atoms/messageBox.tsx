@@ -7,6 +7,7 @@ interface MessageProps {
   messageText: string;
   timestamp: Date;
   isRead: boolean;
+
   sender: {
     username: string;
     avatarURL: string | null;
@@ -18,12 +19,14 @@ interface MessageBoxProps {
   message: MessageProps;
   currentUser_id?: string;
   showProfileInfo: boolean;
+  previousSessionSenderId?: string;
 }
 
 const MessageBox: React.FC<MessageBoxProps> = ({
   message,
   currentUser_id,
   showProfileInfo,
+  previousSessionSenderId,
 }) => {
   //   const [formattedTimestamp, setFormattedTimestamp] = useState("");
 
@@ -54,23 +57,31 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   //       return format(messageDate, "PP p");
   //     }
   //   };
+
   return (
     <div className="Message-contents">
       {showProfileInfo && (
         <div className="Message-subcontents">
           <UserAvatar
-            avatarPic={message?.sender?.avatarURL as string}
+            avatarPic={message.sender.avatarURL || ""}
             loverPic={undefined}
           />
-          <div className="Message-headings">
-            <h4>{message.sender.username}</h4>
-            <p>date</p>
+          <div className="Message-info">
+            <div className="Message-headings">
+              <h4>{message.sender.username}</h4>
+              <p>date</p> {/* Display formatted date */}
+            </div>
+            <div className="Message-text">
+              <p>{message.messageText}</p>
+            </div>
           </div>
         </div>
       )}
-      <div className="Message-text">
-        <p>{message.messageText}</p>
-      </div>
+      {!showProfileInfo && (
+        <div className="Message-text-only">
+          <p>{message.messageText}</p>
+        </div>
+      )}
     </div>
   );
 };

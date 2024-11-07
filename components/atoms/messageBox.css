@@ -1,39 +1,50 @@
 .Message-contents {
   display: flex;
-  height: auto;
-  width: calc(100% - 20px);
-  margin-right: 10px;
-  margin-left: 10px;
-  background-color: aliceblue;
-  padding: 10px;
+  flex-direction: column;
+  width: 100%;
+  margin: -1px;
 }
+
 .Message-subcontents {
   display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.Message-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  width: 100%;
 }
 
 .Message-headings {
   display: flex;
-  background-color: red;
-  width: 100%;
+  align-items: center;
   gap: 10px;
-  height: 20px;
 }
 
 .Message-headings h4 {
   font-weight: bold;
+  margin: 0;
 }
+
 .Message-headings p {
   font-weight: 100;
   font-size: 12px;
-  margin-top: 3px;
 }
+
 .Message-text {
-  display: column;
-  width: 100%;
-  background-color: rgb(98, 98, 143);
+  margin-top: 6px;
 }
-/* margin: 10px;
-padding: 20px;
-border-radius: 20px;
-width: calc(100% - 20px);
-background-color: aliceblue; */
+.Message-text-only {
+  color: rgb(0, 0, 0);
+  margin-left: calc(13vw + 10px); /* Avatar width + gap */
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+
+  width: calc(100% - 13vw - 30px); /* Adjusts to fit remaining space */
+}
