@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { pusherClient } from "@/lib/pusher";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -9,6 +8,7 @@ import InputField from "@/components/atoms/inputField";
 import { MessageFetchData } from "@/lib/messageFetchData";
 import MessageBox from "@/components/atoms/messageBox";
 import Link from "next/link";
+import { userFetchData } from "@/lib/userFetchData";
 
 interface MessageProps {
   messageText: string;
@@ -24,6 +24,7 @@ interface MessageProps {
 interface TotalMessages {
   messages: MessageProps[];
 }
+
 const Chat = () => {
   const [message, setMessage] = useState("");
   const [totalMessages, setTotalMessages] = useState<TotalMessages>({
@@ -31,89 +32,88 @@ const Chat = () => {
   });
 
   const roomId = "672ba95d35edcad4876800c0";
+  const { user } = userFetchData();
   const { data: session } = useSession();
+  const bottomChatRef = useRef<HTMLDivElement>(null);
 
   const fetchInitialMessages = async () => {
     if (!session?.user?.email) return;
-
-    const initialData = await MessageFetchData(roomId, session.user.email);
-    console.log(initialData.messages);
+    if (!user?.messageRoomId) return;
+    const initialData = await MessageFetchData(
+      user?.messageRoomId,
+      session.user.email
+    );
     setTotalMessages({ messages: initialData.messages });
   };
 
   useEffect(() => {
     fetchInitialMessages();
-  }, [session]);
-  useEffect(() => {
-    pusherClient.subscribe(roomId);
+  }, [session, user]);
 
-    const handleMessage = async (data: any) => {
-      setTotalMessages((prevMessage) => {
-        return {
+  useEffect(() => {
+    if (user?.messageRoomId) {
+      pusherClient.subscribe(user.messageRoomId);
+
+      const handleMessage = (data: MessageProps) => {
+        setTotalMessages((prevMessage) => ({
           ...prevMessage,
           messages: [...prevMessage.messages, data],
-        };
-      });
-    };
-    pusherClient.bind("new-message", handleMessage);
+        }));
+      };
 
-    return () => {
-      pusherClient.unsubscribe(roomId);
-      pusherClient.unbind("new-message", handleMessage);
-    };
-  }, []);
+      pusherClient.bind("new-message", handleMessage);
 
-  const messageData = {
-    email: session?.user.email,
-    message,
-    roomId,
-  };
+      return () => {
+        pusherClient.unbind("new-message", handleMessage);
+        pusherClient.unsubscribe(user.messageRoomId);
+      };
+    }
+  }, [user?.messageRoomId]);
+
   const sendMessage = async () => {
     try {
-      const response = await axios.post("api/message", messageData);
-    } catch (error: any) {
-      console.log(error);
+      await axios.post("api/message", {
+        email: session?.user.email,
+        message,
+        roomId: user?.messageRoomId,
+      });
+      setMessage(""); // Clear input field after sending
+    } catch (error) {
+      console.error(error);
     }
   };
-  let previousSenderId: any = null;
-  const bottomChatRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [totalMessages]);
+
   return (
     <div>
       <div>
         <Link className="textLink" href={"/"}>
-          {" "}
           GO TO DASHBOARD
         </Link>
       </div>
       <div className="chatContainer">
         {totalMessages.messages.map((msg, index) => {
-          // Determine if we should show profile info for the current message
-          const showProfileInfo = msg.sender._id !== previousSenderId;
+          // const previousSenderId =
+          //   index > 0 ? totalMessages.messages[index - 1].sender._id : null;
 
-          const messageBox = (
+          return (
             <MessageBox
               key={index}
               message={msg}
               currentUser_id={session?.user?.id}
-              showProfileInfo={showProfileInfo}
+              // previousSessionSenderId={previousSenderId as string} // Pass previous sender ID
             />
           );
-
-          // Update previousSenderId to the current message's sender
-          previousSenderId = msg.sender._id;
-          return messageBox;
         })}
         <div ref={bottomChatRef} />
       </div>
-      <input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      ></input>
+      <input value={message} onChange={(e) => setMessage(e.target.value)} />
       <button onClick={sendMessage}>Send</button>
     </div>
   );
 };
+
 export default Chat;

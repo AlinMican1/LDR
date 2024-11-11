@@ -67,6 +67,7 @@ a {
   overflow-y: auto;
   background-color: #f0f0f0; /* Optional for visual contrast */
   padding: 10px;
+  padding-bottom: 20px;
   box-sizing: border-box;
 }
 .ContentContainer {

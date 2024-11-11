@@ -62,7 +62,7 @@ export const MessageFetchData = async (
 ): Promise<MessageReturnProps> => {
   if (!userEmail || !roomId)
     return { currentUser_id: null, avatar: null, username: null, messages: [] };
-
+  console.log(roomId);
   try {
     const { data } = await axios.get(`/api/message/${roomId}`);
     const userMessages = data.message;
