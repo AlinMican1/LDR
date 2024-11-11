@@ -18,14 +18,12 @@ interface MessageProps {
 interface MessageBoxProps {
   message: MessageProps;
   currentUser_id?: string;
-  showProfileInfo: boolean;
   previousSessionSenderId?: string;
 }
 
 const MessageBox: React.FC<MessageBoxProps> = ({
   message,
   currentUser_id,
-  showProfileInfo,
   previousSessionSenderId,
 }) => {
   //   const [formattedTimestamp, setFormattedTimestamp] = useState("");
@@ -58,30 +56,44 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   //     }
   //   };
 
+  const [messageClass, setMessageClass] = useState(""); // Define state to store class
+  const isCurrentUser = currentUser_id === (message.sender._id as string);
+  useEffect(() => {
+    const updatedClass = isCurrentUser
+      ? "Message-subcontents right"
+      : "Message-subcontents";
+    setMessageClass(updatedClass);
+  }, [isCurrentUser, message.sender._id]); // Add any dependency you want to track
+  // const messageClass = isCurrentUser
+  //   ? "Message-subcontents right"
+  //   : "Message-subcontents";
+  // const [showAvatar, setShowAvatar] = useState(true);
+  // useEffect(() => {
+  //   setShowAvatar(message.sender._id !== previousSessionSenderId);
+  // }, [message.sender._id, previousSessionSenderId]);
   return (
     <div className="Message-contents">
-      {showProfileInfo && (
-        <div className="Message-subcontents">
-          <UserAvatar
-            avatarPic={message.sender.avatarURL || ""}
-            loverPic={undefined}
-          />
-          <div className="Message-info">
-            <div className="Message-headings">
-              <h4>{message.sender.username}</h4>
-              <p>date</p> {/* Display formatted date */}
-            </div>
-            <div className="Message-text">
-              <p>{message.messageText}</p>
-            </div>
+      <div className={messageClass}>
+        {/* {!isCurrentUser && showAvatar && (
+          // <UserAvatar
+          //   avatarPic={message.sender.avatarURL || ""}
+          //   loverPic={undefined}
+          // />
+          // <h4>{message.sender.username}</h4>
+          
+        )} */}
+
+        <div className="Message-info">
+          <div className="Message-headings">
+            {/* {!isCurrentUser && <h4>{message.sender.username}</h4>} */}
+
+            <p>date</p>
+          </div>
+          <div className="Message-text">
+            <p>{message.messageText}</p>
           </div>
         </div>
-      )}
-      {!showProfileInfo && (
-        <div className="Message-text-only">
-          <p>{message.messageText}</p>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

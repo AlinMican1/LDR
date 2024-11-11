@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
 import connectToDB from "@/lib/database";
+import MessageRoom from "@/models/messageRoom";
 
 export async function POST(request: NextRequest) {
   // Establish connection
@@ -56,41 +57,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// export async function GET(request: NextRequest) {
-//   try {
-//     // Connect to the database
-//     await connectToDB();
-
-//     // Attempt to parse the request body
-//     const body = await request.json().catch(() => null);
-
-//     if (!body || !body.loverTag) {
-//       return NextResponse.json(
-//         { message: "Invalid or missing loverTag in request body" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const { loverTag } = body;
-
-//     // Check if the user with the given loverTag exists in the database
-//     const requestExists = await User.findOne({ loverTag });
-
-//     // Handle different cases
-//     if (requestExists && requestExists.request && requestExists.request.to) {
-//       return NextResponse.json({ message: "To given" }, { status: 200 });
-//     } else {
-//       return NextResponse.json({ message: "From given" }, { status: 200 });
-//     }
-//   } catch (error) {
-//     console.error("Error occurred:", error);
-//     return NextResponse.json(
-//       { message: "Server error occurred" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
 export async function PUT(request: NextRequest) {
   await connectToDB();
   const { senderId } = await request.json();
@@ -131,11 +97,37 @@ export async function PUT(request: NextRequest) {
 
     await sender.save();
     await receiver.save();
+    // START OF MESSAGEROOM ADDITION
+    let messageRoom = await MessageRoom.findOne({
+      users: { $all: [sender._id, receiver._id] }, // Ensure both users are in the room
+    });
 
+    if (!messageRoom) {
+      // If the room doesn't exist, create it
+      messageRoom = new MessageRoom({
+        users: [sender._id, receiver._id],
+      });
+      await messageRoom.save();
+
+      if (!sender.messageRooms) {
+        sender.messageRooms = []; // Initialize as an empty array if undefined
+      }
+
+      if (!receiver.messageRooms) {
+        receiver.messageRooms = []; // Initialize as an empty array if undefined
+      }
+
+      sender.messageRooms.push(messageRoom._id);
+      receiver.messageRooms.push(messageRoom._id);
+      await sender.save();
+      await receiver.save();
+    }
     return NextResponse.json(
       { message: "Lover request accepted successfully" },
       { status: 200 }
     );
+
+    // END OF MESSAGEROOM ADDITION
   } catch (error: any) {
     return NextResponse.json(
       { message: "Internal server error" },

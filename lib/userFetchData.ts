@@ -7,6 +7,7 @@ interface User {
   username: string;
   avatarURL: string;
   meetDate: string | null;
+  messageRoomId: string;
 }
 
 interface Lover {
@@ -46,6 +47,7 @@ export const userFetchData = (): UserFetchDataResult => {
             username: user.username,
             avatarURL: user.avatarURL,
             meetDate: user.meetDate,
+            messageRoomId: user.messageRooms[0],
           });
         }
 
