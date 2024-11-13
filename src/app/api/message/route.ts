@@ -6,8 +6,8 @@ import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { email, message, roomId } = await request.json();
-  if (!email || !message || !roomId) {
+  const { email, message, messageTime, roomId } = await request.json();
+  if (!email || !message || !roomId || !messageTime) {
     return NextResponse.json(
       { message: "no email or message given" },
       { status: 400 }
@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
     // Trigger the new message event via Pusher
     await pusherServer.trigger(roomId, "new-message", {
       messageText: message,
+      timestamp: messageTime,
       sender: {
         username: user.username,
         _id: user._id,

@@ -60,16 +60,7 @@ a {
   background-color: #131212;
   margin-top: 10px;
 }
-.chatContainer {
-  width: 100vw;
 
-  height: 90vh;
-  overflow-y: auto;
-  background-color: #f0f0f0; /* Optional for visual contrast */
-  padding: 10px;
-  padding-bottom: 20px;
-  box-sizing: border-box;
-}
 .ContentContainer {
   margin: 10px;
   padding: 20px;
@@ -77,9 +68,7 @@ a {
   width: calc(100% - 20px);
   background-color: aliceblue;
 }
-.AvoidGoingBelowNavBar {
-  height: calc(100vh - 40px);
-}
+
 .subContentContainer {
   display: flex;
   flex-direction: column;

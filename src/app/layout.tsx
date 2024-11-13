@@ -32,7 +32,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider>
-          <div className="AvoidGoingBelowNavBar">
+          <div>
             {children}
             <NavBar />
           </div>

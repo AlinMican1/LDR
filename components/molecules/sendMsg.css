@@ -1,0 +1,26 @@
+.sendMsgInput {
+  width: 80vw;
+  height: 35px;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 0px;
+  background-color: white;
+  color: black;
+}
+.sendMsgInput :active {
+  border: 1px black;
+}
+.sendMsgContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.sendMsgButton {
+  border-radius: 50%;
+
+  margin: 10px;
+  background-color: transparent;
+  border: 0px;
+  font-size: 35px;
+}

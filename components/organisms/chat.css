@@ -1,0 +1,27 @@
+.chatLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* Prevents entire layout from scrolling */
+  box-sizing: border-box;
+}
+
+/* Chat container occupies remaining space above the input field */
+.chatContainer {
+  flex: 1;
+  overflow-y: auto; /* Enables scrolling within chat messages */
+  background-color: #f0f0f0;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.DashboardContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+}
+.Dashboard {
+  margin-left: 20px;
+  gap: 40px;
+  font-weight: bold;
+}

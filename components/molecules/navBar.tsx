@@ -3,6 +3,7 @@ import "./navBar.css";
 import { NavBarButton } from "../atoms/customButton";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 const NavBar = () => {
@@ -14,6 +15,8 @@ const NavBar = () => {
       setActiveButton("home");
     } else if (path === "/settings") {
       setActiveButton("settings");
+    } else if (path === "/chat") {
+      setActiveButton("chat");
     }
   }, [path]); // This useEffect runs every time the path changes
 
@@ -22,19 +25,27 @@ const NavBar = () => {
   }
 
   return (
-    <div className="navbarContainer">
-      <NavBarButton
-        link="/"
-        icon={faHome}
-        isActive={activeButton === "home"}
-        onClick={() => setActiveButton("home")}
-      ></NavBarButton>
-      <NavBarButton
-        link="/settings"
-        icon={faBars}
-        isActive={activeButton === "settings"} // Check if this button is active
-        onClick={() => setActiveButton("settings")}
-      ></NavBarButton>
+    <div className="AvoidGoingBelowNavBar">
+      <div className="navbarContainer">
+        <NavBarButton
+          link="/chat"
+          icon={faMessage}
+          isActive={activeButton === "chat"} // Check if this button is active
+          onClick={() => setActiveButton("chat")}
+        ></NavBarButton>
+        <NavBarButton
+          link="/"
+          icon={faHome}
+          isActive={activeButton === "home"}
+          onClick={() => setActiveButton("home")}
+        ></NavBarButton>
+        <NavBarButton
+          link="/settings"
+          icon={faBars}
+          isActive={activeButton === "settings"} // Check if this button is active
+          onClick={() => setActiveButton("settings")}
+        ></NavBarButton>
+      </div>
     </div>
   );
 };

@@ -73,3 +73,30 @@
 
   width: calc(100% - 13vw - 30px); /* Adjusts to fit remaining space */
 }
+.Message-time {
+  font-size: 12px;
+  color: rgb(28, 28, 28);
+}
+.Message-Date-Container {
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Horizontally center the sub-container */
+  align-items: center;
+  margin: 10px;
+}
+.Message-Date-SubContainer {
+  background-color: rgb(158, 95, 95);
+  display: flex; /* Use flexbox to center the content inside */
+  justify-content: center; /* Horizontally center the text */
+  align-items: center; /* Vertically center the text */
+  width: auto;
+  padding: 10px;
+  height: 100%; /* Ensure it takes the full height of the parent */
+  border-radius: 20px;
+}
+.Message-Date {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
