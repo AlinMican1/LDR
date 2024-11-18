@@ -12,6 +12,7 @@ import SendMsgInput from "../molecules/sendMsg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
+import { io } from "socket.io-client";
 import "./chat.css";
 
 interface MessageProps {
@@ -35,7 +36,7 @@ const Chat = () => {
   const [totalMessages, setTotalMessages] = useState<TotalMessages>({
     messages: [],
   });
-
+  const socket = io("http://localhost:3000");
   const { user } = userFetchData();
   const { data: session } = useSession();
   const bottomChatRef = useRef<HTMLDivElement>(null);
@@ -53,41 +54,70 @@ const Chat = () => {
   useEffect(() => {
     fetchInitialMessages();
   }, [session, user]);
+  //PUSHER WAY
+  // useEffect(() => {
+  //   if (user?.messageRoomId) {
+  //     pusherClient.subscribe(user.messageRoomId);
 
-  useEffect(() => {
-    if (user?.messageRoomId) {
-      pusherClient.subscribe(user.messageRoomId);
+  //     const handleMessage = (data: MessageProps) => {
+  //       setTotalMessages((prevMessage) => ({
+  //         ...prevMessage,
+  //         messages: [...prevMessage.messages, data],
+  //       }));
+  //     };
 
-      const handleMessage = (data: MessageProps) => {
-        setTotalMessages((prevMessage) => ({
-          ...prevMessage,
-          messages: [...prevMessage.messages, data],
-        }));
-      };
+  //     pusherClient.bind("new-message", handleMessage);
 
-      pusherClient.bind("new-message", handleMessage);
-
-      return () => {
-        pusherClient.unbind("new-message", handleMessage);
-        pusherClient.unsubscribe(user.messageRoomId);
-      };
-    }
-  }, [user?.messageRoomId]);
+  //     return () => {
+  //       pusherClient.unbind("new-message", handleMessage);
+  //       pusherClient.unsubscribe(user.messageRoomId);
+  //     };
+  //   }
+  // }, [user?.messageRoomId]);
 
   const sendMessage = async () => {
-    console.log("hh", Date());
+    if (!message.trim()) return;
+
     try {
+      const messageData = {
+        email: session?.user?.email,
+        messageText: message,
+        timestamp: new Date(),
+        roomId: user?.messageRoomId,
+        sender: {
+          _id: user?._id,
+        },
+      };
       await axios.post("api/message", {
         email: session?.user.email,
         message,
         messageTime: Date(),
         roomId: user?.messageRoomId,
-      });
-      setMessage("");
+      }); // Send message to server
+
+      socket.emit("send_msg", messageData); // Emit message via Socket.io
+      setMessage(""); // Clear input field
     } catch (error) {
-      console.error(error);
+      console.error("Error sending message:", error);
     }
   };
+  useEffect(() => {
+    if (user?.messageRoomId) {
+      socket.emit("join_room", user.messageRoomId);
+    }
+
+    const handleReceiveMessage = (data: MessageProps) => {
+      setTotalMessages((prevMessages) => ({
+        messages: [...prevMessages.messages, data],
+      }));
+    };
+
+    socket.on("receive_msg", handleReceiveMessage);
+
+    return () => {
+      socket.off("receive_msg", handleReceiveMessage); // Clean up the listener when the component unmounts or roomId changes
+    };
+  }, [user?.messageRoomId]); // This will trigger when user?.messageRoomId changes
 
   useEffect(() => {
     bottomChatRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -98,7 +128,7 @@ const Chat = () => {
       <div className="DashboardContainer">
         <Link className="Dashboard" href={"/"}>
           <FontAwesomeIcon icon={faAngleLeft} />
-          DashBoard
+          Dashboard
         </Link>
       </div>
       <div className="chatContainer">
@@ -107,19 +137,14 @@ const Chat = () => {
             ? format(new Date(msg.timestamp), "yyyy-MM-dd")
             : null;
           const prevMsgDate =
-            index > 0 && totalMessages.messages[index - 1].timestamp
+            index > 0
               ? format(
                   new Date(totalMessages.messages[index - 1].timestamp),
                   "yyyy-MM-dd"
                 )
               : null;
 
-          let showDate = false;
-          if (currMsgDate != prevMsgDate) {
-            showDate = true;
-          } else {
-            showDate = false;
-          }
+          const showDate = currMsgDate !== prevMsgDate;
 
           return (
             <MessageBox

@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import next from "../client/node_modules/next";
+import next from "next";
 import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
@@ -16,6 +16,18 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.log("connected");
+
+    socket.on("join_room", (roomId) => {
+      socket.join(roomId);
+      console.log(`user with id-${socket.id} joined room - ${roomId}`);
+    });
+
+    // You can emit events to clients like this
+    socket.on("send_msg", (data) => {
+      console.log(data, "DATA");
+      //This will send a message to a specific room ID
+      socket.to(data.roomId).emit("receive_msg", data);
+    });
   });
 
   httpServer

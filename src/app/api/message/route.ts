@@ -55,14 +55,14 @@ export async function POST(request: NextRequest) {
     await messageRoom.save();
 
     // Trigger the new message event via Pusher
-    await pusherServer.trigger(roomId, "new-message", {
-      messageText: message,
-      timestamp: messageTime,
-      sender: {
-        username: user.username,
-        _id: user._id,
-      },
-    });
+    // await pusherServer.trigger(roomId, "new-message", {
+    //   messageText: message,
+    //   timestamp: messageTime,
+    //   sender: {
+    //     username: user.username,
+    //     _id: user._id,
+    //   },
+    // });
 
     return NextResponse.json(
       { message: "Message sent successfully", messageId: newMessage._id },

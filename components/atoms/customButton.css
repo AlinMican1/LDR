@@ -3,6 +3,7 @@
   background-color: transparent;
   border: 0px;
   color: grey;
+  position: relative;
 }
 
 .customButtonContainer.active {
