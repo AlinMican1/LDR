@@ -6,6 +6,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { NotifyButton } from "../atoms/notifyButton";
 const NavBar = () => {
   const [activeButton, setActiveButton] = useState<string>("home"); // To track the active button
   const path = usePathname();
@@ -45,6 +46,12 @@ const NavBar = () => {
           isActive={activeButton === "settings"} // Check if this button is active
           onClick={() => setActiveButton("settings")}
         ></NavBarButton>
+        <NotifyButton
+          link="/chat"
+          icon={faMessage}
+          isActive={activeButton === "chat"} // Check if this button is active
+          onClick={() => setActiveButton("chat")}
+        />
       </div>
     </div>
   );

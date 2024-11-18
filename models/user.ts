@@ -66,6 +66,10 @@ const UserSchema = new mongoose.Schema({
       ref: "MessageRoom",
     },
   ],
+  messageLastRead: {
+    type: Date,
+    default: null,
+  },
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,

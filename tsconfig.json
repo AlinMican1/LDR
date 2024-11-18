@@ -26,7 +26,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "lib/server.js"
+    "lib/server.js",
+    "src/app/socket.js"
   ],
   "exclude": ["node_modules"]
 }
