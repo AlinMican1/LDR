@@ -76,9 +76,9 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(response);
 }
 
-export async function GET(request: NextRequest) {
-  await connectToDB();
-  const { email } = await request.json();
-  const user = await User.findOne({ email });
-  return NextResponse.json({ message: "User found", user });
-}
+// export async function GET(request: NextRequest) {
+//   await connectToDB();
+//   const { email } = await request.json();
+//   const user = await User.findOne({ email });
+//   return NextResponse.json({ message: "User found", user });
+// }

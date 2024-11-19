@@ -9,4 +9,9 @@
   justify-content: center;
   align-items: center;
   gap: 15vw;
+  z-index: 10;
+}
+.AvoidGoingBelowNavBar {
+  padding-bottom: 50px; /* Add padding equal to the navbar height */
+  overflow-y: auto;
 }

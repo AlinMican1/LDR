@@ -1,0 +1,102 @@
+.Message-contents {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: -1px;
+}
+
+.Message-subcontents {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+.Message-subcontents.right {
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-right: 5px;
+}
+
+.Message-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0px;
+  max-width: 80%;
+  background-color: rgb(185, 114, 21);
+  padding: 10px;
+  border-radius: 5px 5px 5px 0px;
+  overflow-wrap: break-word; /* Ensures long words break to the next line */
+  word-wrap: break-word;
+  overflow: hidden; /* Hides any overflowing content */
+}
+
+.Message-subcontents.right .Message-info {
+  text-align: right; /* Aligns all text content to the right */
+  background-color: rgb(192, 118, 232);
+  border-radius: 5px 5px 0px 5px;
+}
+
+.Message-headings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Message-headings h4 {
+  font-weight: bold;
+  margin: 0;
+}
+.Message-subcontents.right .Message-headings {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.Message-headings p {
+  font-weight: 100;
+  font-size: 12px;
+}
+
+.Message-text {
+  margin-top: 6px;
+  max-width: 100%; /* Ensures text does not exceed the parent box width */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap; /* Allows handling of long unbroken text */
+}
+.Message-text-only {
+  color: rgb(0, 0, 0);
+  margin-left: calc(13vw + 10px); /* Avatar width + gap */
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+
+  width: calc(100% - 13vw - 30px); /* Adjusts to fit remaining space */
+}
+.Message-time {
+  font-size: 12px;
+  color: rgb(28, 28, 28);
+}
+.Message-Date-Container {
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Horizontally center the sub-container */
+  align-items: center;
+  margin: 10px;
+}
+.Message-Date-SubContainer {
+  background-color: rgb(158, 95, 95);
+  display: flex; /* Use flexbox to center the content inside */
+  justify-content: center; /* Horizontally center the text */
+  align-items: center; /* Vertically center the text */
+  width: auto;
+  padding: 10px;
+  height: 100%; /* Ensure it takes the full height of the parent */
+  border-radius: 20px;
+}
+.Message-Date {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
