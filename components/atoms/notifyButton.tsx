@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import "./notifyButton.css";
 import { io } from "socket.io-client";
+import { MessageFetchData } from "@/lib/messageFetchData";
 
 interface NotifyButtonProps {
   icon?: any;
@@ -26,28 +27,48 @@ export function NotifyButton({
   const { data: session } = useSession();
   const { user } = userFetchData() || {};
   const [hasNewMessage, setHasNewMessage] = useState(false);
-
-  //   useEffect(() => {
-  //     // Only subscribe if there's a valid user and messageRoomId
-  //     if (!session?.user?.id || !user?.messageRoomId) return;
-
-  //     const channel = pusherClient.subscribe(`room-${user.messageRoomId}`);
-  //     channel.bind("new-message", (data: any) => {
-  //       setHasNewMessage(true); // New message received, mark as unread
-  //     });
-
-  //     // Clean up on component unmount or user/messageRoomId change
-  //     return () => {
-  //       channel.unbind_all();
-  //       channel.unsubscribe();
-  //     };
-  //   }, [session?.user?.id, user?.messageRoomId]); // Dependency array ensures this only runs on session/user changes
-
-  //   if (!user?.messageRoomId) return null; // Early return if there's no messageRoomId
+  const [latestMessageTime, setLatestMessageTime] = useState<Date | null>(null);
 
   useEffect(() => {
+    const fetchLatestMessageTime = async () => {
+      if (!session?.user.email || !user?.messageRoomId) return;
+
+      try {
+        // Fetch messages
+        const data = await MessageFetchData(
+          user.messageRoomId,
+          session.user.email
+        );
+
+        // Get the timestamp of the latest message (if available)
+        if (data.messages.length > 0) {
+          const latestMessage = data.messages[data.messages.length - 1];
+          setLatestMessageTime(new Date(latestMessage.timestamp));
+        } else {
+          setLatestMessageTime(null);
+        }
+      } catch (error) {
+        console.error("Error fetching the latest message time:", error);
+      }
+    };
+
+    fetchLatestMessageTime();
+  }, [user?.messageRoomId, session?.user.email]);
+
+  useEffect(() => {
+    if (!user?.messageLastRead || !latestMessageTime) return;
+
+    const messageLastRead = new Date(user.messageLastRead);
+    if (latestMessageTime > messageLastRead) {
+      setHasNewMessage(true); // There's a new message
+    } else {
+      setHasNewMessage(false); // No new messages
+    }
+  }, [latestMessageTime, user?.messageLastRead]);
+
+  useEffect(() => {
+    if (!user) return;
     const socket = io("http://localhost:3000");
-    if (!session?.user?.id || !user?.messageRoomId) return;
 
     // Join the socket room
     socket.emit("join_room", user.messageRoomId);
