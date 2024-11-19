@@ -27,6 +27,7 @@ declare module "next-auth" {
       //   status: "pending" | "accepted" | "rejected";
       // };
     };
+
     token: {
       id: string;
       username: string;

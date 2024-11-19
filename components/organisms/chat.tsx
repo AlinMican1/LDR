@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { pusherClient } from "@/lib/pusher";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { MessageFetchData } from "@/lib/messageFetchData";
@@ -74,7 +73,15 @@ const Chat = () => {
   //     };
   //   }
   // }, [user?.messageRoomId]);
-
+  const updateLastRead = async () => {
+    try {
+      await axios.put(`api/message/${user?.messageRoomId}`, {
+        userId: session?.user.id,
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
   const sendMessage = async () => {
     if (!message.trim()) return;
 
@@ -126,7 +133,7 @@ const Chat = () => {
   return (
     <div className="chatLayout">
       <div className="DashboardContainer">
-        <Link className="Dashboard" href={"/"}>
+        <Link onClick={() => updateLastRead()} className="Dashboard" href={"/"}>
           <FontAwesomeIcon icon={faAngleLeft} />
           Dashboard
         </Link>
