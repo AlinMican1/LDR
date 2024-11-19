@@ -68,6 +68,7 @@ a {
   width: calc(100% - 20px);
   background-color: aliceblue;
 }
+
 .subContentContainer {
   display: flex;
   flex-direction: column;

@@ -32,8 +32,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider>
-          {children}
-          <NavBar />
+          <div>
+            {children}
+            <NavBar />
+          </div>
         </AuthProvider>
       </body>
     </html>

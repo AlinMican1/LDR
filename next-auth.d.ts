@@ -2,6 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface User {
+    id: string;
     username: string;
     isAdmin: boolean;
     avatarURL: string;
@@ -15,6 +16,7 @@ declare module "next-auth" {
 
   interface Session {
     user: User & {
+      id: string;
       username: string;
       isAdmin: boolean;
       avatarURL: string;
@@ -26,6 +28,7 @@ declare module "next-auth" {
       // };
     };
     token: {
+      id: string;
       username: string;
       isAdmin: boolean;
       avatarURL: string;

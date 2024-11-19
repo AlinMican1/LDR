@@ -1,0 +1,14 @@
+.notificationSymbol {
+  background-color: red;
+  color: white;
+  width: 7px; /* Adjust the size of the circle */
+  height: 7px;
+  border-radius: 50%; /* Make it a perfect circle */
+  position: absolute;
+  top: -1.5px; /* Position the circle above the top edge of the icon */
+  right: -3px; /* Position the circle at the left edge of the icon */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px; /* Optional: Add small text inside the circle */
+}

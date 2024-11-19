@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         return {
           ...token,
+          id: user.id,
           username: user.username,
           isAdmin: user.isAdmin,
           avatarURL: user.avatarURL,
@@ -75,6 +76,7 @@ export const authOptions: NextAuthOptions = {
           isAdmin: token.isAdmin,
           avatarURL: token.avatarURL,
           loverTag: token.loverTag,
+          id: token.id,
           // request: token.request,
         },
       };
