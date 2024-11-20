@@ -5,6 +5,10 @@ interface ContainerRoundProps {
 }
 // A box with round edges that starts at the bottom of the page and fills upwards as we add children.
 const ContainerRound = ({ children }: ContainerRoundProps) => {
-  return <div className="roundBox">{children}</div>;
+  return (
+    <div role="region" className="roundBox">
+      {children}
+    </div>
+  );
 };
 export default ContainerRound;
