@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import "./messageBox.css";
+import "../../src/app/globals.css";
 import UserAvatar from "./userAvatar";
 import { format, isValid } from "date-fns";
 interface MessageProps {
