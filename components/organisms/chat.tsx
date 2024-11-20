@@ -53,26 +53,8 @@ const Chat = () => {
   useEffect(() => {
     fetchInitialMessages();
   }, [session, user]);
-  //PUSHER WAY
-  // useEffect(() => {
-  //   if (user?.messageRoomId) {
-  //     pusherClient.subscribe(user.messageRoomId);
 
-  //     const handleMessage = (data: MessageProps) => {
-  //       setTotalMessages((prevMessage) => ({
-  //         ...prevMessage,
-  //         messages: [...prevMessage.messages, data],
-  //       }));
-  //     };
-
-  //     pusherClient.bind("new-message", handleMessage);
-
-  //     return () => {
-  //       pusherClient.unbind("new-message", handleMessage);
-  //       pusherClient.unsubscribe(user.messageRoomId);
-  //     };
-  //   }
-  // }, [user?.messageRoomId]);
+  //Function to update last read message, to help with notification when logged out.
   const updateLastRead = async () => {
     try {
       await axios.put(`api/message/${user?.messageRoomId}`, {

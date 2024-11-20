@@ -25,12 +25,16 @@ const PickDate: React.FC<PickDateProps> = ({
   const containerClass = name === "Day" ? "dateContainerDay" : "dateContainer";
   return (
     <div>
-      <h1 className="selectDateTitle">Select {name} To Meet</h1>
+      <h1 className={`${"selectDateTitle"} ${"roboto-font"}`}>
+        Select {name} To Meet
+      </h1>
       <div className={containerClass}>
         {array.map((item, index) => (
           <button
             key={index}
-            className={`dateButton ${selectedItem === item ? "active" : ""}`} // Apply active class if selected
+            className={`dateButton ${
+              selectedItem === item ? "active" : ""
+            } ${"inter-font"}`} // Apply active class if selected
             type="button" // Ensure the button type is set
             onClick={() => handleClick(item)} // Handle button click
           >

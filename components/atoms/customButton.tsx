@@ -125,3 +125,17 @@ export function RejectLoverRequestButton({
     </button>
   );
 }
+
+interface SetButtonProps {
+  icon?: any;
+  onclick?: (e: React.MouseEvent<HTMLButtonElement> | React.FormEvent) => void;
+  name?: string;
+}
+export function SetButton({ icon, onclick, name }: SetButtonProps) {
+  return (
+    <button className={`${"setButton"} ${"roboto-font"}`} onClick={onclick}>
+      {icon && <FontAwesomeIcon icon={icon} />}
+      {name}
+    </button>
+  );
+}

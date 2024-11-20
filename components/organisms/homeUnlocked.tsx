@@ -8,7 +8,7 @@ const HomeUnlocked = () => {
   return (
     <div>
       {tur ? (
-        <Modal>
+        <Modal buttonName="Set Meet Date">
           <PickDateParent />
         </Modal>
       ) : (
