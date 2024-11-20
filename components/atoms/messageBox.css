@@ -53,8 +53,7 @@
 }
 
 .Message-headings p {
-  font-weight: 100;
-  font-size: 12px;
+  font-size: var(--font-size-span);
 }
 
 .Message-text {
@@ -63,6 +62,7 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   white-space: pre-wrap; /* Allows handling of long unbroken text */
+  font-size: var(--font-size-p);
 }
 .Message-text-only {
   color: rgb(0, 0, 0);
@@ -74,7 +74,7 @@
   width: calc(100% - 13vw - 30px); /* Adjusts to fit remaining space */
 }
 .Message-time {
-  font-size: 12px;
+  font-size: var(--font-size-span);
   color: rgb(28, 28, 28);
 }
 .Message-Date-Container {
