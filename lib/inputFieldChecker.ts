@@ -29,7 +29,7 @@ export const PasswordChecker = (
 
   if (password === "") {
     passwordError = true;
-    passwordMsg = "Password is required";
+    passwordMsg = "Password is required.";
   } else if (password.length < 8 && requirement) {
     passwordError = true;
     passwordMsg = "Password must be at least 8 characters.";

@@ -71,7 +71,6 @@ export async function PUT(
       { status: 404 }
     );
   }
-  console.log("hi", roomId);
   try {
     await connectToDB();
     const chatRoom = await MessageRoom.findById(roomId).select("users");
