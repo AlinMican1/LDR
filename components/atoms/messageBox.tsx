@@ -100,8 +100,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               {/* {!isCurrentUser && <h4>{message.sender.username}</h4>} */}
             </div>
             <div className="Message-text">
-              <p>{message.messageText}</p>
-              <p className="Message-time">
+              <p className="roboto-font">{message.messageText}</p>
+              <p className={`${"Message-time"} ${"inter-font"} `}>
                 {isTimestampValid ? format(timestamp, "HH:mm") : "Invalid Time"}
               </p>
             </div>

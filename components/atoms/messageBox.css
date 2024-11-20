@@ -63,6 +63,7 @@
   word-wrap: break-word;
   white-space: pre-wrap; /* Allows handling of long unbroken text */
   font-size: var(--font-size-p);
+  font-weight: 100;
 }
 .Message-text-only {
   color: rgb(0, 0, 0);
@@ -76,6 +77,7 @@
 .Message-time {
   font-size: var(--font-size-span);
   color: rgb(28, 28, 28);
+  font-weight: 100;
 }
 .Message-Date-Container {
   height: 30px;

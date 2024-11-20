@@ -108,7 +108,8 @@ const HomeLocked = () => {
   // Render content conditionally based on loading, delay, and requestData
   return (
     <div>
-      <div className="subContentContainer">
+      <Request />
+      {/* <div className="subContentContainer">
         <h2>Features are locked!</h2>
         <p>To unlock the app to its full extent, add your significant other!</p>
 
@@ -147,9 +148,9 @@ const HomeLocked = () => {
               <h3>Give your tag instead?</h3>
               <LoverTag />
             </div>
-          </div>
-        )}
-      </div>
+          </div> */}
+      {/* )} */}
+      {/* </div> */}
     </div>
   );
 };

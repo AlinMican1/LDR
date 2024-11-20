@@ -18,7 +18,7 @@ const LoverTag = () => {
     <div>
       <div className="subContentContainerRow">
         <div className="tagDisplay">
-          <h3>{session?.user.loverTag}</h3>
+          <h3 className="roboto-font">{session?.user.loverTag}</h3>
         </div>
         <CopyToClipboard
           text={session?.user.loverTag as string}
