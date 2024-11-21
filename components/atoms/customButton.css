@@ -20,23 +20,23 @@
   margin-left: 10px;
 }
 
-.acceptButton {
+.acceptRequestButton {
   background-color: transparent;
-  border-radius: 40px;
-  font-size: 20px;
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-h1);
   padding: 10px 40px 10px 40px;
   border: 1px solid;
-  color: rgb(167, 104, 226);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  color: var(--main-text-color);
+  box-shadow: var(--main-box-shadow);
   margin: 10px;
 }
 
 .rejectButton {
   background-color: transparent;
   border: 0px;
-  color: grey;
-  font-size: 15px;
-  margin-top: 10px;
+  color: var(--main-text-color);
+  font-size: var(--font-size-p);
+  margin-top: var(--margin-normal);
 }
 
 .iconButton {

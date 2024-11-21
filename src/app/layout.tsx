@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import NavBar from "@/components/molecules/navBar";
 import { Roboto } from "next/font/google";
 import { Inter } from "next/font/google";
+import ReactQueryProvider from "@/utils/reactQueryProvider";
 
 const roboto_init = Roboto({
   subsets: ["latin"],
@@ -45,10 +46,12 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${roboto_init.variable} ${inter_init.variable}`}>
         <AuthProvider>
-          <div>
-            {children}
-            <NavBar />
-          </div>
+          <ReactQueryProvider>
+            <div>
+              {children}
+              <NavBar />
+            </div>
+          </ReactQueryProvider>
         </AuthProvider>
       </body>
     </html>

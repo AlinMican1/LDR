@@ -25,10 +25,15 @@ export function NotifyButton({
   onClick,
 }: NotifyButtonProps) {
   const { data: session } = useSession();
-  const { user } = userFetchData() || {};
+  const { user, lover } = userFetchData() || {};
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [latestMessageTime, setLatestMessageTime] = useState<Date | null>(null);
 
+  //Check if user has lover, otherwise the link is for a different page
+  if (!lover) {
+    link = "./locked";
+  }
+  //Add notification for last message even if the user is logged out.
   useEffect(() => {
     const fetchLatestMessageTime = async () => {
       if (!session?.user.email || !user?.messageRoomId) return;

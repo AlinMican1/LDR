@@ -5,6 +5,6 @@ interface RequestCardProps {
 }
 
 const RequestCard = ({ children }: RequestCardProps) => {
-  return <div className="requestCard">{children}</div>;
+  return <div className={`${"roboto-font"} ${"requestCard"}`}>{children}</div>;
 };
 export default RequestCard;

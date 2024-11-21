@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-
+import { useQuery } from "@tanstack/react-query";
 interface UserRequest {
   _id: string;
   username: string;
@@ -14,51 +13,49 @@ interface UserFetchRequestResult {
   title: string;
   avatar: string;
   accept: boolean;
-  error: string | null;
+  paragraph?: string;
+  errorMsg: string | null;
+  isLoading: boolean;
 }
 
 export const userFetchRequest = (): UserFetchRequestResult => {
-  const { data: session } = useSession();
-  const [requestData, setRequestData] = useState<UserRequest | null>(null);
-  const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [accept, setAccept] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
+  const fetchData = async () => {
+    if (session?.user?.email) {
+      const { data } = await axios.get(`/api/users/${session.user.email}`);
+      return data;
+    }
+    return { user: { request: null } };
+  };
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["user", , session?.user?.email],
+    queryFn: fetchData,
+    enabled: sessionStatus === "authenticated" && !!session?.user?.email, // Only enable query if email exists in the session
+    staleTime: 1000 * 60 * 5,
+  });
 
-  useEffect(() => {
-    const fetchRequest = async () => {
-      if (session?.user?.email) {
-        try {
-          const userResponse = await axios.get(
-            `/api/users/${session.user.email}`
-          );
+  const request = data?.user?.request;
+  const requestData = request?.to || request?.from || null;
+  const name = requestData?.username || "";
+  const avatar = requestData?.avatarURL || "";
+  const title = request?.to ? "Match Sent!" : "Match Received!";
+  const paragraph = request?.to
+    ? "Now you have to wait until they accept your request!"
+    : "How exciting you received a request!";
+  const errorMsg = error
+    ? "Failed to fetch requests."
+    : !request
+    ? "No requests found."
+    : null;
 
-          const { user } = userResponse.data;
-
-          if (!user.request) return;
-
-          if (user.request.to) {
-            setRequestData(user.request.to);
-            setName(user.request.to?.username || "");
-            setAvatar(user.request.to?.avatarURL || "");
-            setTitle("Match Sent!");
-          } else if (user.request.from) {
-            setRequestData(user.request.from);
-            setAccept(true);
-            setName(user.request.from?.username || "");
-            setAvatar(user.request.from?.avatarURL || "");
-            setTitle("Match Received!");
-          }
-        } catch (error) {
-          console.error("Error fetching user requests:", error);
-          setError("Failed to fetch requests.");
-        }
-      }
-    };
-
-    fetchRequest();
-  }, [session]);
-
-  return { requestData, name, title, avatar, accept, error };
+  return {
+    requestData,
+    name,
+    title,
+    avatar,
+    accept: !!request?.from,
+    errorMsg,
+    paragraph,
+    isLoading: sessionStatus === "loading" || isLoading,
+  };
 };

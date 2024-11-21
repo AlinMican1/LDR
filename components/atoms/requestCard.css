@@ -1,19 +1,20 @@
 .requestCard {
-  width: 80vw;
-  padding: 20px;
+  width: auto;
+  padding: var(--padding-large);
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: var(--border-radius-normal);
   justify-content: center;
   gap: 10px;
   align-items: center;
   text-align: center;
-  background-color: aquamarine;
+  background-color: rgb(150, 216, 245);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  margin-top: 20px;
+  margin-top: var(--margin-large);
 }
 
 .requestCard p {
-  font-size: 15px;
-  color: grey;
+  font-size: var(--font-size-p);
+  color: var(--main-text-color);
+  font-weight: 100;
 }
