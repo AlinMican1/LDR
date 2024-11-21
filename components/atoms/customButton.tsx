@@ -90,7 +90,7 @@ export function AcceptLoverRequestButton({
     } catch (error: any) {}
   };
   return (
-    <button className="acceptButton" onClick={acceptRequest}>
+    <button className="acceptRequestButton" onClick={acceptRequest}>
       Accept
     </button>
   );
@@ -120,7 +120,10 @@ export function RejectLoverRequestButton({
     }
   };
   return (
-    <button className="rejectButton" onClick={acceptRequest}>
+    <button
+      className={`${"inter-font"} ${"rejectButton"}`}
+      onClick={acceptRequest}
+    >
       {name}
     </button>
   );

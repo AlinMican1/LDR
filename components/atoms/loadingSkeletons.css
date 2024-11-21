@@ -1,0 +1,65 @@
+@keyframes shimmer {
+  to {
+    background-position: -100% 0;
+  }
+}
+.loadingAnimation {
+  background-image: linear-gradient(
+    90deg,
+    #ccc 0px,
+    rgb(229 229 229/ 90%) 40px,
+    #ccc 80px
+  );
+  background-size: 300%;
+  background-position: 100% 0;
+  border-radius: inherit;
+  animation: shimmer 1.5s infinite;
+}
+.loadingSkeletonProfilePic {
+  border-radius: 50%;
+  width: 13vw;
+  height: 13vw;
+}
+.loadingSkeletonCard1 {
+  width: auto;
+  height: 250px;
+  margin-top: var(--margin-large);
+  padding: var(--padding-small);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--border-radius-large);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.loadingSkeletonTitle1 {
+  display: flex;
+  width: calc(80% - 30px);
+  height: 20px;
+}
+.loadingSkeletonDescription1 {
+  height: 10px;
+  display: flex;
+  width: auto;
+}
+
+.loadingSkeletonDescription2 {
+  height: 15px;
+  display: flex;
+  width: calc(100% - 50px);
+}
+.loadingCard1 {
+  width: auto;
+  height: auto;
+  margin-top: var(--margin-large);
+  padding: var(--padding-normal);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--border-radius-large);
+  /* justify-content: center;
+  align-items: center;
+  text-align: center; */
+  gap: 10px;
+  background-color: rgb(179, 179, 179);
+}

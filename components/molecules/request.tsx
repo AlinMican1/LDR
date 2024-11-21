@@ -15,9 +15,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import LoverTag from "../atoms/loverTag";
 import { faHeartBroken } from "@fortawesome/free-solid-svg-icons";
+import { LoadingSkeleton1 } from "../atoms/loadingSkeletons";
 
 const Request = () => {
-  const { requestData, name, title, avatar, accept } = userFetchRequest();
+  const { requestData, name, title, avatar, accept, paragraph, isLoading } =
+    userFetchRequest();
   const { data: session } = useSession();
   const [addLover, setAddLover] = useState({
     sender: "",
@@ -112,7 +114,7 @@ const Request = () => {
       }
     }
   };
-
+  //Send request
   useEffect(() => {
     if (session?.user?.loverTag) {
       setAddLover((prev) => ({
@@ -123,13 +125,13 @@ const Request = () => {
   }, [session]);
 
   // Simulate a delay (e.g., 1 second) before rendering
-  useEffect(() => {
-    const fetchTimeout = setTimeout(() => {
-      setDelayOver(true); // Delay is over after 1 second
-    }, 1000); // 1 second delay
+  // useEffect(() => {
+  //   const fetchTimeout = setTimeout(() => {
+  //     setDelayOver(true); // Delay is over after 1 second
+  //   }, 1000); // 1 second delay
 
-    return () => clearTimeout(fetchTimeout); // Cleanup timeout if the component unmounts
-  }, []);
+  //   return () => clearTimeout(fetchTimeout); // Cleanup timeout if the component unmounts
+  // }, []);
 
   // Update loading state based on requestData fetch
   useEffect(() => {
@@ -137,11 +139,16 @@ const Request = () => {
       setLoading(false); // Stop loading when requestData is fetched
     }
   }, [requestData]);
+
   return (
     <div>
-      {requestData && session ? (
+      {/* Show loading state at the very top */}
+      {isLoading ? (
+        <LoadingSkeleton1 /> // Show a loading state until delay is over and requestData is fetched
+      ) : requestData && session ? (
         <RequestCard>
-          <h1>{title}</h1>
+          <h1 className="requestCardTitle">{title}</h1>
+          <p className="inter-font">{paragraph}</p>
 
           <Image
             className="avatarLover"
@@ -151,7 +158,7 @@ const Request = () => {
             alt="hi"
           />
 
-          <h2>{name}</h2>
+          <h2 className="requestCardName">{name}</h2>
 
           <div>
             {accept ? (
@@ -165,6 +172,7 @@ const Request = () => {
               </div>
             ) : (
               <div>
+                <div className="line"></div>
                 <RejectLoverRequestButton
                   loverTag={session?.user.loverTag}
                   name="Cancel Request"
@@ -184,10 +192,7 @@ const Request = () => {
           <p className={`${"paragraphLocked"} ${"inter-font"}`}>
             To unlock the app to its full extent, add your significant other!
           </p>
-
-          {loading || !delayOver ? (
-            <p>Loading...</p> // Show a loading state until delay is over and requestData is fetched
-          ) : requestData ? (
+          {requestData ? (
             <Request />
           ) : (
             <div>

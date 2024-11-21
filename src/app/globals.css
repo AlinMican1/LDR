@@ -23,6 +23,8 @@
   --border-radius-small: 5px;
   --border-radius-normal: 10px;
   --border-radius-large: 20px;
+
+  --loading-skeleton-color: rgb(181, 180, 180);
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -112,7 +114,7 @@ a {
   padding: var(--padding-small);
   display: flex;
   flex-direction: column;
-  border-radius: 20px;
+  border-radius: var(--border-radius-large);
   justify-content: center;
   align-items: center;
   text-align: center;
