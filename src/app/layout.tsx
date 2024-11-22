@@ -4,17 +4,31 @@ import "./globals.css";
 import AuthProvider from "@/utils/SessionProvider";
 import { getServerSession } from "next-auth";
 import NavBar from "@/components/molecules/navBar";
+import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
+import ReactQueryProvider from "@/utils/reactQueryProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const roboto_init = Roboto({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
+  variable: "--font-roboto",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const inter_init = Inter({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "700", "900"],
+  variable: "--font-inter",
 });
+// const geistSans = localFont({
+//   src: "./fonts/GeistVF.woff",
+//   variable: "--font-geist-sans",
+//   weight: "100 900",
+// });
+// const geistMono = localFont({
+//   src: "./fonts/GeistMonoVF.woff",
+//   variable: "--font-geist-mono",
+//   weight: "100 900",
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,12 +44,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${roboto_init.variable} ${inter_init.variable}`}>
         <AuthProvider>
-          <div>
-            {children}
-            <NavBar />
-          </div>
+          <ReactQueryProvider>
+            <div>
+              {children}
+              <NavBar />
+            </div>
+          </ReactQueryProvider>
         </AuthProvider>
       </body>
     </html>

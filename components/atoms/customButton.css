@@ -2,12 +2,12 @@
   font-size: medium;
   background-color: transparent;
   border: 0px;
-  color: grey;
+  color: var(--unselected-color);
   position: relative;
 }
 
 .customButtonContainer.active {
-  color: black;
+  color: var(--selected-color);
   font-size: larger;
 }
 
@@ -20,32 +20,43 @@
   margin-left: 10px;
 }
 
-.acceptButton {
+.acceptRequestButton {
   background-color: transparent;
-  border-radius: 40px;
-  font-size: 20px;
+  border-radius: var(--border-radius-small);
+  font-size: var(--font-size-h1);
   padding: 10px 40px 10px 40px;
   border: 1px solid;
-  color: rgb(167, 104, 226);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  color: var(--main-text-color);
+  box-shadow: var(--main-box-shadow);
   margin: 10px;
 }
 
 .rejectButton {
   background-color: transparent;
   border: 0px;
-  color: grey;
-  font-size: 15px;
-  margin-top: 10px;
+  color: var(--main-text-color);
+  font-size: var(--font-size-p);
+  margin-top: var(--margin-normal);
 }
 
 .iconButton {
   background-color: transparent;
-  color: rgb(14, 137, 22);
+  color: rgb(0, 0, 0);
   border: 0px;
   font-size: 40px;
   display: flex;
   margin-left: calc((100% - 38px) / 2);
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.setButton {
+  color: var(--main-text-color);
+  background-color: transparent;
+  border: 0.5px solid black;
+  padding: var(--padding-small);
+  border-radius: var(--border-radius-small);
+  margin-top: var(--margin-small);
+  font-weight: 100;
+  font-size: var(--font-size-span);
 }

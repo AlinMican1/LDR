@@ -10,9 +10,9 @@ interface UserAvatarProps {
 
 const UserAvatar = ({ avatarPic, loverPic }: UserAvatarProps) => {
   // If no session or avatar is available, show a fallback or nothing
-  if (!avatarPic) {
-    return <p>Loading avatar...</p>; // Placeholder when no avatar yet
-  }
+  // if (!avatarPic) {
+  //   return <p>Loading avatar...</p>; // Placeholder when no avatar yet
+  // }
 
   return (
     <div className="avatarsContainer">
