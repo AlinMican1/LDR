@@ -1,7 +1,7 @@
 .navbarContainer {
   width: 100vw;
-  height: 40px;
-  background-color: aliceblue;
+  height: 60px;
+  background-color: var(--main-color);
   position: fixed;
   bottom: 0;
   display: flex;
@@ -12,6 +12,6 @@
   z-index: 10;
 }
 .AvoidGoingBelowNavBar {
-  padding-bottom: 50px; /* Add padding equal to the navbar height */
+  padding-bottom: 70px; /* Add padding equal to the navbar height */
   overflow-y: auto;
 }

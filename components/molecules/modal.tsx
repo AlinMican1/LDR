@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./modal.css";
+import { SetButton } from "../atoms/customButton";
 
 interface ModalProps {
   children?: React.ReactNode;
+  buttonName?: string;
 }
 
-const Modal = ({ children }: ModalProps) => {
+const Modal = ({ children, buttonName }: ModalProps) => {
   const [open, setOpen] = useState(false);
 
   const openModal = () => {
@@ -26,12 +28,13 @@ const Modal = ({ children }: ModalProps) => {
           <div className="modalContainer" onClick={handleClickOutside}>
             <div className="modal">
               {children}
-              <button onClick={openModal}>Close</button>
+              <SetButton name={"cancel"} onclick={openModal}></SetButton>
+              {/* <button onClick={openModal}>Cancel</button> */}
             </div>
           </div>
         </div>
       ) : (
-        <button onClick={openModal}>Open</button>
+        <SetButton name={buttonName} onclick={openModal}></SetButton>
       )}
     </>
   );

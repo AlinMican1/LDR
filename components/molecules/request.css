@@ -3,5 +3,32 @@
   border-radius: 50%;
   width: 25vw;
   height: 25vw;
-  box-shadow: rgb(102, 39, 97) 0px 3px 8px;
+  box-shadow: var(--main-box-shadow);
+}
+.brokenHeart {
+  font-size: calc(100px + 0.390625vw);
+}
+.titleLocked {
+  font-size: var(--font-size-h1);
+  font-weight: 300;
+  margin-bottom: var(--margin-Xsmall);
+  color: black;
+}
+.paragraphLocked {
+  font-weight: 100;
+  font-size: var(--font-size-p);
+  color: var(--unselective-color);
+}
+.requestCardTitle {
+  font-size: var(--font-size-h1);
+  font-weight: 500;
+}
+.requestCardName {
+  font-size: var(--font-size-h1);
+  font-weight: 400;
+}
+.requestCardParagraph {
+  font-size: var(--font-size-p);
+  font-weight: 300;
+  color: black;
 }

@@ -1,5 +1,4 @@
 import connectToDB from "@/lib/database";
-import { pusherServer } from "@/lib/pusher";
 import Message from "@/models/message";
 import MessageRoom from "@/models/messageRoom";
 import User from "@/models/user";

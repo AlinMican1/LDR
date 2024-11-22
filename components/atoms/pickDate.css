@@ -9,16 +9,17 @@
   justify-content: center;
 }
 .dateButton {
-  margin: 5px;
+  margin: var(--margin-Xsmall);
   height: 15vw;
-  background-color: blue;
+
   align-items: center;
   justify-content: center;
   background-color: transparent;
   color: black;
   border: 1px solid;
   border-color: black;
-  border-radius: 5px;
+  border-radius: var(--border-radius-small);
+  font-weight: 300;
 }
 .dateButton:active,
 .dateButton.active {
@@ -29,6 +30,7 @@
 .selectDateTitle {
   justify-content: center;
   display: flex;
-  margin: 20px;
-  font-size: 16px;
+  margin: var(--margin-large);
+  font-size: var(--font-size-h1);
+  font-weight: 500;
 }

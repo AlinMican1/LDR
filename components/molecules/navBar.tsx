@@ -28,23 +28,17 @@ const NavBar = () => {
   return (
     <div className="AvoidGoingBelowNavBar">
       <div className="navbarContainer">
-        <NavBarButton
+        {/* <NavBarButton
           link="/chat"
           icon={faMessage}
           isActive={activeButton === "chat"} // Check if this button is active
           onClick={() => setActiveButton("chat")}
-        ></NavBarButton>
+        ></NavBarButton> */}
         <NavBarButton
           link="/"
           icon={faHome}
           isActive={activeButton === "home"}
           onClick={() => setActiveButton("home")}
-        ></NavBarButton>
-        <NavBarButton
-          link="/settings"
-          icon={faBars}
-          isActive={activeButton === "settings"} // Check if this button is active
-          onClick={() => setActiveButton("settings")}
         ></NavBarButton>
         <NotifyButton
           link="/chat"
@@ -52,6 +46,12 @@ const NavBar = () => {
           isActive={activeButton === "chat"} // Check if this button is active
           onClick={() => setActiveButton("chat")}
         />
+        <NavBarButton
+          link="/settings"
+          icon={faBars}
+          isActive={activeButton === "settings"} // Check if this button is active
+          onClick={() => setActiveButton("settings")}
+        ></NavBarButton>
       </div>
     </div>
   );

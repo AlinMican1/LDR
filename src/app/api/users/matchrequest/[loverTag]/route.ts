@@ -2,39 +2,45 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDB from "@/lib/database";
 import User from "@/models/user";
 
-// export async function GET(
-//   request: NextRequest,
-//   { params }: { params: { loverTag: string } }
-// ) {
-//   const { loverTag } = params;
-//   if (!loverTag) {
-//     return NextResponse.json(
-//       { error: "loverTag is required" },
-//       { status: 400 }
-//     );
-//   }
-//   try {
-//     await connectToDB();
-//     const user = await User.findOne({ loverTag })
-//       .populate("request.from", "username avatarURL")
-//       .populate("request.to", "username avatarURL");
-//     if (!user) {
-//       return NextResponse.json({ error: "User not found" }, { status: 404 });
-//     }
-//     return NextResponse.json(
-//       {
-//         loverTag: user.loverTag,
-//         request: user.request,
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error: any) {
-//     return NextResponse.json(
-//       { error: "Something went wrong" },
-//       { status: 500 }
-//     );
-//   }
-// }
+//This is used to get information about the lover, for instance if the lover already has someone
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { loverTag: string } }
+) {
+  const { loverTag } = params;
+  if (!loverTag) {
+    return NextResponse.json(
+      { error: "loverTag is required" },
+      { status: 400 }
+    );
+  }
+  try {
+    await connectToDB();
+    const user = await User.findOne({ loverTag });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (user.lover) {
+      return NextResponse.json(
+        { error: "User already has lover" },
+        { status: 403 }
+      );
+    }
+    return NextResponse.json(
+      {
+        loverTag: user.loverTag,
+        request: user.request,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function DELETE(
   request: NextRequest,

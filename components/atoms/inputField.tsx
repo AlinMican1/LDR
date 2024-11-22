@@ -28,7 +28,9 @@ const InputField = ({
 }: inputFieldParams) => {
   return (
     <div className="input-wrapper">
-      <label htmlFor={label}>{label}</label>
+      <label className="roboto-font" htmlFor={label}>
+        {label}
+      </label>
       <div className="input-with-icon">
         {icon && <span className="input-icon">{icon}</span>}{" "}
         {/* Render the icon if provided */}
@@ -40,10 +42,10 @@ const InputField = ({
           placeholder={placeholder}
           onChange={onChange}
           disabled={disabled}
-          className={error ? "input-error" : ""}
+          className={`${error ? "input-error" : ""} roboto-font`}
         />
       </div>
-      {error && <p className="error">{errorMsg}</p>}
+      {error && <p className={`${"error"} ${"inter-font"}`}>{errorMsg}</p>}
     </div>
   );
 };

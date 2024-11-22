@@ -1,22 +1,26 @@
 .copyTextButton {
-  background-color: rgb(204, 75, 189);
+  /* background-color: rgb(204, 75, 189); */
+  background: transparent;
   color: rgb(0, 0, 0);
   border: 0px;
-  font-size: 20px;
+  font-size: var(--font-size-h1);
   padding: 10px;
   border-radius: 10px;
 }
 .tagDisplay {
-  background-color: pink;
+  /* background-color: pink; */
   width: auto;
   height: auto;
-  padding: 10px 15vw 10px 15vw;
+  /* padding: 10px 15vw 10px 15vw; */
   border-radius: 10px;
 }
 .tagDisplay h3 {
   font-style: italic;
+  font-size: var(--font-size-p);
+  font-weight: 400;
 }
 .copiedText {
-  margin: 5px;
-  color: gray;
+  margin: var(--margin-Xsmall);
+  color: var(--unselected-color);
+  font-size: var(--font-size-span);
 }
