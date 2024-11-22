@@ -87,6 +87,13 @@ a {
   margin-top: 10px;
   z-index: 10;
 }
+.LoadingScreen {
+  display: flex;
+  height: 100vh;
+  background-color: var(--background);
+  justify-content: center;
+  align-items: center;
+}
 
 .ContentContainer {
   margin: var(--margin-small);
