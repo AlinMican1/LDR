@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
+
 interface UserRequest {
   _id: string;
   username: string;
@@ -20,6 +21,7 @@ interface UserFetchRequestResult {
 
 export const userFetchRequest = (): UserFetchRequestResult => {
   const { data: session, status: sessionStatus } = useSession();
+
   const fetchData = async () => {
     if (session?.user?.email) {
       const { data } = await axios.get(`/api/users/${session.user.email}`);
@@ -53,8 +55,8 @@ export const userFetchRequest = (): UserFetchRequestResult => {
     name,
     title,
     avatar,
-    accept: !!request?.from,
     errorMsg,
+    accept: !!request?.from,
     paragraph,
     isLoading: sessionStatus === "loading" || isLoading,
   };
