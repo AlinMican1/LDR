@@ -3,6 +3,7 @@ import UserAvatar from "../atoms/userAvatar";
 import { userFetchData } from "@/lib/userFetchData";
 import HomeLocked from "../organisms/homeLocked";
 import HomeUnlocked from "../organisms/homeUnlocked";
+import UploadComponent from "../atoms/uploadAvatar";
 
 const Home = () => {
   const { lover, isLoading, user } = userFetchData(); // Get loading state
@@ -15,6 +16,7 @@ const Home = () => {
   // Render content based on whether there's a lover or not
   return (
     <div className="ContentContainer">
+      {/* <UploadComponent /> */}
       {/* {isLoading ? (
         <p>ARFARFARF.</p> // Show this when data is still loading
       ) : ( */}
