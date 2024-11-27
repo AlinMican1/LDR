@@ -150,7 +150,6 @@ const Request = () => {
       // Listen for real-time updates
       socket.on("receive_lover_request", (data) => {
         //Check if there is a sender and since we are use interface requestData, we have to declare it the same
-        console.log(data);
         setRealTimeRequest({
           avatarURL: data.sender.avatarURL,
           username: data.sender.username,
@@ -166,9 +165,9 @@ const Request = () => {
       socket.disconnect();
     };
   }, [AddLover]);
-  console.log("BB", requestData);
-  const activeRequest = requestData !== null ? requestData : realTimeRequest;
-  console.log("ACC", activeRequest);
+
+  const activeRequest = realTimeRequest || requestData;
+
   return (
     <div>
       {/* Show loading state at the very top */}
