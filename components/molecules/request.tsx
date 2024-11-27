@@ -16,20 +16,18 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import LoverTag from "../atoms/loverTag";
 import { faHeartBroken } from "@fortawesome/free-solid-svg-icons";
 import { LoadingSkeleton1 } from "../atoms/loadingSkeletons";
+import { io } from "socket.io-client";
 
 const Request = () => {
   const { requestData, name, title, avatar, accept, paragraph, isLoading } =
     userFetchRequest();
+
   const { data: session } = useSession();
   const [addLover, setAddLover] = useState({
     sender: "",
     receiver: "",
   });
-
-  // Loading state for the request
-  const [loading, setLoading] = useState(true);
-  // Add a delay state to simulate waiting for the data
-  const [delayOver, setDelayOver] = useState(false);
+  const socket = io("http://localhost:3000");
 
   // Error states
   const [error, setError] = useState(false);
@@ -57,6 +55,7 @@ const Request = () => {
         senderLoverTag: addLover.sender,
         receiverLoverTag: addLover.receiver,
       };
+
       //CHECK IF USER ALREADY HAS LOVER
       try {
         const response = await axios.get(
@@ -83,13 +82,29 @@ const Request = () => {
       }
       if (!hasLover) {
         try {
+          const RequestData = {
+            // receiver: {
+            //   loverTag: addLover.receiver,
+            // },
+            // sender: {
+            _id: session?.user.id,
+            username: session?.user.username,
+            avatarURL: session?.user.avatarURL,
+            loverTag: addLover.receiver,
+
+            // },
+          };
           const response = await axios.post("/api/users/matchrequest", data);
           if (response.status === 200) {
             setError(false);
             setErrorMsg("");
             setMainError(false);
             setMainErrorMsg("");
-            window.location.reload();
+            // window.location.reload();
+            socket.emit("send_lover_request", {
+              senderEmail: session?.user.email, // Send sender's email
+              receiverLoverTag: addLover.receiver,
+            });
           }
         } catch (error: any) {
           if (error.response) {
@@ -124,47 +139,61 @@ const Request = () => {
     }
   }, [session]);
 
-  // Simulate a delay (e.g., 1 second) before rendering
-  // useEffect(() => {
-  //   const fetchTimeout = setTimeout(() => {
-  //     setDelayOver(true); // Delay is over after 1 second
-  //   }, 1000); // 1 second delay
-
-  //   return () => clearTimeout(fetchTimeout); // Cleanup timeout if the component unmounts
-  // }, []);
-
-  // Update loading state based on requestData fetch
+  const [realTimeRequest, setRealTimeRequest] = useState(requestData);
+  const [requestReceived, setRequestReceived] = useState(false);
   useEffect(() => {
-    if (requestData !== undefined) {
-      setLoading(false); // Stop loading when requestData is fetched
-    }
-  }, [requestData]);
+    // Join room based on user's loverTag
+    if (session?.user?.loverTag) {
+      const loverTag = session.user.loverTag;
+      socket.emit("join_room_loverTag", loverTag);
 
+      // Listen for real-time updates
+      socket.on("receive_lover_request", (data) => {
+        //Check if there is a sender and since we are use interface requestData, we have to declare it the same
+        console.log(data);
+        setRealTimeRequest({
+          avatarURL: data.sender.avatarURL,
+          username: data.sender.username,
+          _id: data.sender._id,
+        });
+        if (data.sender) {
+          setRequestReceived(true);
+        }
+      });
+    }
+    return () => {
+      socket.off("receive_lover_request");
+      socket.disconnect();
+    };
+  }, [AddLover]);
+  console.log("BB", requestData);
+  const activeRequest = requestData !== null ? requestData : realTimeRequest;
+  console.log("ACC", activeRequest);
   return (
     <div>
       {/* Show loading state at the very top */}
       {isLoading ? (
         <LoadingSkeleton1 /> // Show a loading state until delay is over and requestData is fetched
-      ) : requestData && session ? (
+      ) : activeRequest && session ? (
         <RequestCard>
           <h1 className="requestCardTitle">{title}</h1>
           <p className="inter-font">{paragraph}</p>
 
           <Image
             className="avatarLover"
-            src={avatar}
+            src={activeRequest.avatarURL}
             width={200}
             height={200}
             alt="hi"
           />
 
-          <h2 className="requestCardName">{name}</h2>
+          <h2 className="requestCardName">{activeRequest.username}</h2>
 
           <div>
-            {accept ? (
+            {requestReceived || accept ? (
               <div>
                 {/* <p>New lover request received!</p> */}
-                <AcceptLoverRequestButton senderId={requestData._id} />
+                <AcceptLoverRequestButton senderId={activeRequest._id} />
                 <RejectLoverRequestButton
                   loverTag={session?.user.loverTag}
                   name="No, Remove Request"
