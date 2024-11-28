@@ -50,27 +50,48 @@ app.prepare().then(() => {
             ...data,
             sender: senderData.user, // Attach sender's data to the event
           });
-          console.log(
-            "Sent receive_lover_request event with sender data:",
-            senderData
-          );
-        } else {
+          // console.log(
+          //   "Sent receive_lover_request event with sender data:",
+          //   senderData
+          // );
+        } 
+       
+        else {
           console.error("Error: receiverLoverTag is undefined.");
         }
+        socket.emit("update_sender_request",  {
+          message: "Request sent successfully!",
+          sender: senderData.user,
+        });
       } catch (error) {
         console.error("Error fetching sender data:", error);
       }
     });
-
-    socket.on("cancel_lover_request", (data) => {
-      // const receiverRoom = data.receiverLoverTag;
-      if (receiverRoom) {
-        socket.to(receiverRoom).emit("lover_request_canceled", data);
-        console.log("Sent lover_request_canceled event with data:", data);
-      } else {
-        console.error("Error: receiverLoverTag is undefined.");
+    socket.on("cancel_lover_request", async (data) =>{
+      try {
+        const response = await axios.delete(
+          `http://localhost:3000/api/users/matchrequest/${encodeURIComponent(data.loverTag)}`
+        );
+        console.log("Brev")
+        socket.emit("lover_request_canceled");
+      } catch (error) {
+        console.error(
+          "Error deleting match request for loverTag:",
+          data.loverTag,
+          error.response?.data || error.message
+        );
       }
     });
+    
+    // socket.on("cancel_lover_request", (data) => {
+    //   // const receiverRoom = data.receiverLoverTag;
+    //   if (receiverRoom) {
+    //     socket.to(receiverRoom).emit("lover_request_canceled", data);
+    //     console.log("Sent lover_request_canceled event with data:", data);
+    //   } else {
+    //     console.error("Error: receiverLoverTag is undefined.");
+    //   }
+    // });
   });
 
   httpServer
