@@ -27,7 +27,11 @@ const Request = () => {
     sender: "",
     receiver: "",
   });
+
+  //Real time fetching variables
   const socket = io("http://localhost:3000");
+  const [realTimeRequest, setRealTimeRequest] = useState(requestData);
+  const [requestReceived, setRequestReceived] = useState(false);
 
   // Error states
   const [error, setError] = useState(false);
@@ -82,18 +86,7 @@ const Request = () => {
       }
       if (!hasLover) {
         try {
-          const RequestData = {
-            // receiver: {
-            //   loverTag: addLover.receiver,
-            // },
-            // sender: {
-            _id: session?.user.id,
-            username: session?.user.username,
-            avatarURL: session?.user.avatarURL,
-            loverTag: addLover.receiver,
-
-            // },
-          };
+          
           const response = await axios.post("/api/users/matchrequest", data);
           if (response.status === 200) {
             setError(false);
@@ -104,6 +97,10 @@ const Request = () => {
             socket.emit("send_lover_request", {
               senderEmail: session?.user.email, // Send sender's email
               receiverLoverTag: addLover.receiver,
+              
+            });
+            socket.emit("test" , {
+              loverTag: addLover.receiver
             });
           }
         } catch (error: any) {
@@ -139,8 +136,7 @@ const Request = () => {
     }
   }, [session]);
 
-  const [realTimeRequest, setRealTimeRequest] = useState(requestData);
-  const [requestReceived, setRequestReceived] = useState(false);
+ 
   useEffect(() => {
     // Join room based on user's loverTag
     if (session?.user?.loverTag) {
@@ -158,13 +154,28 @@ const Request = () => {
         if (data.sender) {
           setRequestReceived(true);
         }
+        
       });
+      socket.on("update_sender_request", (data) => {
+        setRealTimeRequest({
+          avatarURL: data.sender.request.to.avatarURL,
+          username: data.sender.request.to.username,
+          _id: data.sender.request.to._id,
+        });
+      
+      });
+      socket.on("lover_request_cancelled", () => {
+        console.log("Lover request canceled:")
+        setRealTimeRequest(null)
+      })
+      
     }
     return () => {
       socket.off("receive_lover_request");
+      socket.off("update_sender_request")
       socket.disconnect();
     };
-  }, [AddLover]);
+  }, [session?.user?.loverTag]);
 
   const activeRequest = realTimeRequest || requestData;
 
