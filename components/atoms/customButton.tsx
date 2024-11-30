@@ -6,9 +6,8 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { io } from "socket.io-client";
-import { useEffect } from "react";
-
+import { getSocket } from "@/app/socket";
+import { useState } from "react";
 interface NavBarButtonProps {
   icon?: any;
   link: string;
@@ -109,7 +108,7 @@ export function RejectLoverRequestButton({
 }: RejectLoverRequestProps) {
 
   //REAL TIME FETCHING 
-  const socket = io("http://localhost:3000");
+  
   // useEffect(() => {
 
   //   socket.emit("cancel_lover_request", {
@@ -122,6 +121,8 @@ export function RejectLoverRequestButton({
   //   };  
     
   // },[])
+  const [socket, setSocket] = useState(() => getSocket());
+
   const rejectRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -132,13 +133,15 @@ export function RejectLoverRequestButton({
       );
       
       if (response.status === 200) {
+        socket.connect()
         socket.emit("cancel_lover_request", {
-          lovertag: loverTag
+          loverTag: loverTag
         })
       }
     } catch (error: any) {
       console.error(error);
     }
+
   };
   return (
     <button

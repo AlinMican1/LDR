@@ -68,11 +68,11 @@ app.prepare().then(() => {
       }
     });
     socket.on("cancel_lover_request", async (data) =>{
+      
       try {
         const response = await axios.delete(
           `http://localhost:3000/api/users/matchrequest/${encodeURIComponent(data.loverTag)}`
         );
-        console.log("Brev")
         socket.emit("lover_request_canceled");
       } catch (error) {
         console.error(
@@ -81,6 +81,8 @@ app.prepare().then(() => {
           error.response?.data || error.message
         );
       }
+      socket.emit("lover_request_cancelled")
+      
     });
     
     // socket.on("cancel_lover_request", (data) => {
