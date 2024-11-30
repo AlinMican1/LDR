@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
 import { io } from "socket.io-client";
+import { getSocket } from "@/app/socket";
 import "./chat.css";
 
 interface MessageProps {
@@ -35,10 +36,11 @@ const Chat = () => {
   const [totalMessages, setTotalMessages] = useState<TotalMessages>({
     messages: [],
   });
-  const socket = io("http://localhost:3000");
+  // const socket = io("http://localhost:3000");
   const { user } = userFetchData();
   const { data: session } = useSession();
   const bottomChatRef = useRef<HTMLDivElement>(null);
+  const [socket, setSocket] = useState(() => getSocket());
 
   const fetchInitialMessages = async () => {
     if (!session?.user?.email) return;
@@ -52,7 +54,7 @@ const Chat = () => {
 
   useEffect(() => {
     fetchInitialMessages();
-  }, [session, user]);
+  }, []);
 
   //Function to update last read message, to help with notification when logged out.
   const updateLastRead = async () => {
@@ -92,6 +94,7 @@ const Chat = () => {
   };
   useEffect(() => {
     if (user?.messageRoomId) {
+      socket.connect()
       socket.emit("join_room", user.messageRoomId);
     }
 

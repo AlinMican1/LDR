@@ -16,7 +16,8 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import LoverTag from "../atoms/loverTag";
 import { faHeartBroken } from "@fortawesome/free-solid-svg-icons";
 import { LoadingSkeleton1 } from "../atoms/loadingSkeletons";
-import { io } from "socket.io-client";
+import { getSocket } from "@/app/socket";
+
 
 const Request = () => {
   const { requestData, name, title, avatar, accept, paragraph, isLoading } =
@@ -29,9 +30,10 @@ const Request = () => {
   });
 
   //Real time fetching variables
-  const socket = io("http://localhost:3000");
+ 
   const [realTimeRequest, setRealTimeRequest] = useState(requestData);
   const [requestReceived, setRequestReceived] = useState(false);
+  const [socket, setSocket] = useState(() => getSocket());
 
   // Error states
   const [error, setError] = useState(false);
@@ -141,6 +143,7 @@ const Request = () => {
     // Join room based on user's loverTag
     if (session?.user?.loverTag) {
       const loverTag = session.user.loverTag;
+      // socket.connect();
       socket.emit("join_room_loverTag", loverTag);
 
       // Listen for real-time updates
@@ -172,10 +175,11 @@ const Request = () => {
     }
     return () => {
       socket.off("receive_lover_request");
-      socket.off("update_sender_request")
+      socket.off("update_sender_request");
+      socket.off("lover_request_cancelled");
       socket.disconnect();
     };
-  }, [session?.user?.loverTag]);
+  }, [AddLover,socket]);
 
   const activeRequest = realTimeRequest || requestData;
 

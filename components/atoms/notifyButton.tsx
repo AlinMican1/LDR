@@ -6,7 +6,8 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import "./notifyButton.css";
-import { io } from "socket.io-client";
+
+import { getSocket } from "@/app/socket";
 import { MessageFetchData } from "@/lib/messageFetchData";
 
 interface NotifyButtonProps {
@@ -28,8 +29,7 @@ export function NotifyButton({
   const { user, lover } = userFetchData() || {};
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [latestMessageTime, setLatestMessageTime] = useState<Date | null>(null);
-
-  //Check if user has lover, otherwise the link is for a different page
+  const [socket, setSocket] = useState(() => getSocket());  //Check if user has lover, otherwise the link is for a different page
   if (!lover) {
     link = "./locked";
   }
@@ -73,9 +73,10 @@ export function NotifyButton({
 
   useEffect(() => {
     if (!user) return;
-    const socket = io("http://localhost:3000");
+    // const socket = io("http://localhost:3000");
 
     // Join the socket room
+    socket.connect()
     socket.emit("join_room", user.messageRoomId);
 
     // Listen for incoming messages in the room
