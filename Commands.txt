@@ -31,3 +31,4 @@ added "type": "module", in package.json no clue wtf is that
 
 
 npm run test to run tests!
+git pull origin

@@ -9,9 +9,11 @@ import Link from "next/link";
 import { userFetchData } from "@/lib/userFetchData";
 import SendMsgInput from "../molecules/sendMsg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faWindowRestore,
+} from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
-import { io } from "socket.io-client";
 import { getSocket } from "@/app/socket";
 import "./chat.css";
 
@@ -36,7 +38,7 @@ const Chat = () => {
   const [totalMessages, setTotalMessages] = useState<TotalMessages>({
     messages: [],
   });
-  // const socket = io("http://localhost:3000");
+
   const { user } = userFetchData();
   const { data: session } = useSession();
   const bottomChatRef = useRef<HTMLDivElement>(null);
@@ -51,17 +53,25 @@ const Chat = () => {
     );
     setTotalMessages({ messages: initialData.messages });
   };
-
   useEffect(() => {
-    fetchInitialMessages();
-  }, []);
+    if (session?.user?.email && user?.messageRoomId) {
+      fetchInitialMessages();
+    }
+  }, [session?.user?.email, user?.messageRoomId]);
 
   //Function to update last read message, to help with notification when logged out.
   const updateLastRead = async () => {
     try {
-      await axios.put(`api/message/${user?.messageRoomId}`, {
+      const response = await axios.put(`api/message/${user?.messageRoomId}`, {
         userId: session?.user.id,
       });
+      if (response.status === 200) {
+        socket.emit("update_latest_messageTimestamp", {
+          email: session?.user.email,
+          userId: session?.user.id,
+          roomId: user?.messageRoomId,
+        });
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -79,6 +89,11 @@ const Chat = () => {
           _id: user?._id,
         },
       };
+      // Add the message locally
+      // setTotalMessages((prevMessages: any) => ({
+      //   messages: [...prevMessages.messages, messageData],
+      // }));
+
       await axios.post("api/message", {
         email: session?.user.email,
         message,
@@ -92,12 +107,12 @@ const Chat = () => {
       console.error("Error sending message:", error);
     }
   };
+
   useEffect(() => {
     if (user?.messageRoomId) {
-      socket.connect()
       socket.emit("join_room", user.messageRoomId);
     }
-
+    socket.connect();
     const handleReceiveMessage = (data: MessageProps) => {
       setTotalMessages((prevMessages) => ({
         messages: [...prevMessages.messages, data],
@@ -108,6 +123,7 @@ const Chat = () => {
 
     return () => {
       socket.off("receive_msg", handleReceiveMessage); // Clean up the listener when the component unmounts or roomId changes
+      socket.disconnect();
     };
   }, [user?.messageRoomId]); // This will trigger when user?.messageRoomId changes
 

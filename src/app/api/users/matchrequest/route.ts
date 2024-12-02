@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
       (receiver.request && receiver.request.from) ||
       (sender.request && sender.request.to) ||
       (receiver.request && receiver.request.to) ||
-      (sender.request && sender.request.from)
+      (sender.request && sender.request.from) ||
+      (sender.requestConnection && receiver.requestConnection)
     ) {
       return NextResponse.json(
         { error: "There is already has an active request" },
@@ -37,14 +38,25 @@ export async function POST(request: NextRequest) {
         { status: 403 }
       );
     }
+
     const updatedReceiver = await User.findOneAndUpdate(
       { loverTag: receiverLoverTag },
-      { $set: { request: { from: sender._id, status: "pending" } } },
+
+      {
+        $set: {
+          request: { from: sender._id, status: "pending" },
+        },
+      },
       { new: true }
     );
     const updatedSender = await User.findOneAndUpdate(
       { loverTag: senderLoverTag },
-      { $set: { request: { to: receiver._id, status: "pending" } } },
+
+      {
+        $set: {
+          request: { to: receiver._id, status: "pending" },
+        },
+      },
       { new: true }
     );
 

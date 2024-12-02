@@ -46,6 +46,7 @@ export const authOptions: NextAuthOptions = {
           avatarURL: userExist.avatarURL,
           id: userExist._id,
           loverTag: userExist.loverTag,
+          requestConnection: userExist.requestConnection,
           // request: userExist.request,
         };
       },
@@ -61,6 +62,7 @@ export const authOptions: NextAuthOptions = {
           isAdmin: user.isAdmin,
           avatarURL: user.avatarURL,
           loverTag: user.loverTag,
+          requestConnection: user.requestConnection,
           // request: user.request,
         };
       }
@@ -76,6 +78,7 @@ export const authOptions: NextAuthOptions = {
           avatarURL: token.avatarURL,
           loverTag: token.loverTag,
           id: token.id,
+          requestConnection: token.requestConnection,
           // request: token.request,
         },
       };

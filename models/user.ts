@@ -70,6 +70,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,

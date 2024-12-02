@@ -18,7 +18,6 @@ import { faHeartBroken } from "@fortawesome/free-solid-svg-icons";
 import { LoadingSkeleton1 } from "../atoms/loadingSkeletons";
 import { getSocket } from "@/app/socket";
 
-
 const Request = () => {
   const { requestData, name, title, avatar, accept, paragraph, isLoading } =
     userFetchRequest();
@@ -30,7 +29,7 @@ const Request = () => {
   });
 
   //Real time fetching variables
- 
+
   const [realTimeRequest, setRealTimeRequest] = useState(requestData);
   const [requestReceived, setRequestReceived] = useState(false);
   const [socket, setSocket] = useState(() => getSocket());
@@ -88,7 +87,6 @@ const Request = () => {
       }
       if (!hasLover) {
         try {
-          
           const response = await axios.post("/api/users/matchrequest", data);
           if (response.status === 200) {
             setError(false);
@@ -99,10 +97,6 @@ const Request = () => {
             socket.emit("send_lover_request", {
               senderEmail: session?.user.email, // Send sender's email
               receiverLoverTag: addLover.receiver,
-              
-            });
-            socket.emit("test" , {
-              loverTag: addLover.receiver
             });
           }
         } catch (error: any) {
@@ -138,13 +132,14 @@ const Request = () => {
     }
   }, [session]);
 
- 
   useEffect(() => {
     // Join room based on user's loverTag
-    if (session?.user?.loverTag) {
+    if (session?.user?.id) {
       const loverTag = session.user.loverTag;
-      // socket.connect();
-      socket.emit("join_room_loverTag", loverTag);
+      const userId = session.user.id;
+      socket.connect();
+      // socket.emit("join_room_loverTag", loverTag);
+      socket.emit("join_room_loverRequest", userId);
 
       // Listen for real-time updates
       socket.on("receive_lover_request", (data) => {
@@ -157,21 +152,21 @@ const Request = () => {
         if (data.sender) {
           setRequestReceived(true);
         }
-        
       });
+
       socket.on("update_sender_request", (data) => {
         setRealTimeRequest({
           avatarURL: data.sender.request.to.avatarURL,
           username: data.sender.request.to.username,
           _id: data.sender.request.to._id,
         });
-      
       });
+
       socket.on("lover_request_cancelled", () => {
-        console.log("Lover request canceled:")
-        setRealTimeRequest(null)
-      })
-      
+        console.log("Lover request canceled:");
+        setRealTimeRequest(null); // Reset the real-time request to null, effectively removing the request card
+        setRequestReceived(false);
+      });
     }
     return () => {
       socket.off("receive_lover_request");
@@ -179,7 +174,7 @@ const Request = () => {
       socket.off("lover_request_cancelled");
       socket.disconnect();
     };
-  }, [AddLover,socket]);
+  }, [AddLover, socket]);
 
   const activeRequest = realTimeRequest || requestData;
 
@@ -209,7 +204,8 @@ const Request = () => {
                 {/* <p>New lover request received!</p> */}
                 <AcceptLoverRequestButton senderId={activeRequest._id} />
                 <RejectLoverRequestButton
-                  loverTag={session?.user.loverTag}
+                  loverTag={addLover.sender}
+                  receiverLoverTag={addLover.receiver}
                   name="No, Remove Request"
                 />
               </div>
@@ -217,7 +213,8 @@ const Request = () => {
               <div>
                 <div className="line"></div>
                 <RejectLoverRequestButton
-                  loverTag={session?.user.loverTag}
+                  loverTag={addLover.sender}
+                  receiverLoverTag={addLover.receiver}
                   name="Cancel Request"
                 />
               </div>
