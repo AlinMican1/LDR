@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import "./customButton.css";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -56,6 +56,7 @@ export function LogOutButton() {
 
   const logout = async () => {
     await signOut({ redirect: false });
+    window.location.reload();
     router.push("/login"); // Manually redirect to login page
   };
 
@@ -100,48 +101,35 @@ export function AcceptLoverRequestButton({
 interface RejectLoverRequestProps {
   name: string;
   loverTag: string;
+  receiverLoverTag: string;
 }
 
 export function RejectLoverRequestButton({
   name,
   loverTag,
+  receiverLoverTag,
 }: RejectLoverRequestProps) {
-
-  //REAL TIME FETCHING 
-  
-  // useEffect(() => {
-
-  //   socket.emit("cancel_lover_request", {
-  //     lovertag: loverTag
-  //   })
-  //   return () => {
-  //     socket.off("cancel_lover_request_");
-      
-  //     socket.disconnect();
-  //   };  
-    
-  // },[])
   const [socket, setSocket] = useState(() => getSocket());
-
+  const { data: session, status: sessionStatus } = useSession();
   const rejectRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    
+
     try {
-      const response = await axios.delete(
-        `/api/users/matchrequest/${encodeURIComponent(loverTag)}`
-      );
-      
-      if (response.status === 200) {
-        socket.connect()
-        socket.emit("cancel_lover_request", {
-          loverTag: loverTag
-        })
-      }
+      //REAL TIME FETCHING
+      // if (response.status === 200) {
+      socket.connect();
+      socket.emit("cancel_lover_request", {
+        senderId: session?.user.id,
+        senderTag: loverTag,
+        email: session?.user.email,
+        requestConnection: session?.user.requestConnection,
+      });
+      // await axios.delete(
+      //   `/api/users/matchrequest/${encodeURIComponent(loverTag)}`
+      // );
     } catch (error: any) {
       console.error(error);
     }
-
   };
   return (
     <button

@@ -29,10 +29,12 @@ export function NotifyButton({
   const { user, lover } = userFetchData() || {};
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [latestMessageTime, setLatestMessageTime] = useState<Date | null>(null);
-  const [socket, setSocket] = useState(() => getSocket());  //Check if user has lover, otherwise the link is for a different page
+  const [firstLogin, setFirstLogin] = useState<Date | null>(null);
+  const [socket, setSocket] = useState(() => getSocket()); //Check if user has lover, otherwise the link is for a different page
   if (!lover) {
     link = "./locked";
   }
+
   //Add notification for last message even if the user is logged out.
   useEffect(() => {
     const fetchLatestMessageTime = async () => {
@@ -40,6 +42,7 @@ export function NotifyButton({
 
       try {
         // Fetch messages
+
         const data = await MessageFetchData(
           user.messageRoomId,
           session.user.email
@@ -55,43 +58,67 @@ export function NotifyButton({
       } catch (error) {
         console.error("Error fetching the latest message time:", error);
       }
+      // setTest(user?.messageLastRead);
     };
 
     fetchLatestMessageTime();
   }, [user?.messageRoomId, session?.user.email]);
-
+  //offline Functionality
+  // This code is fucked but idea is the first time u log in check if there is a latestmessage from db is bigger than users
+  // lastest message read, if so set the notification to true, after that use realtime to get the latest message timestamp.
   useEffect(() => {
     if (!user?.messageLastRead || !latestMessageTime) return;
 
-    const messageLastRead = new Date(user.messageLastRead);
-    if (latestMessageTime > messageLastRead) {
-      setHasNewMessage(true); // There's a new message
-    } else {
-      setHasNewMessage(false); // No new messages
+    // const messageLastRead = new Date(user.messageLastRead);
+    console.log(latestMessageTime);
+    console.log("LLL", user.messageLastRead);
+
+    if (latestMessageTime > user.messageLastRead && !firstLogin) {
+      setHasNewMessage(true);
     }
-  }, [latestMessageTime, user?.messageLastRead]);
+  }, [user?.messageLastRead, latestMessageTime]);
 
   useEffect(() => {
-    if (!user) return;
-    // const socket = io("http://localhost:3000");
+    if (!user || !socket) return;
 
-    // Join the socket room
-    socket.connect()
+    socket.connect();
+
+    // Join the user to their message room
     socket.emit("join_room", user.messageRoomId);
 
-    // Listen for incoming messages in the room
+    // Listen for real-time updates
     socket.on("receive_msg", (data) => {
-      setHasNewMessage(true); // New message received, mark as unread
+      if (data?.timestamp) {
+        const newMessageTime = new Date(data.timestamp);
+
+        // Check if this new message is after the user's last read time
+        if (user.messageLastRead && newMessageTime > user.messageLastRead) {
+          setHasNewMessage(true);
+        }
+
+        // Update the latest message time
+        setLatestMessageTime(newMessageTime);
+      }
     });
+
+    // Fetch the last read time on first load
+    socket.on("get_last_messageTimestamp", (data) => {
+      if (data?.lastRead) {
+        setFirstLogin(data.lastRead);
+      }
+    });
+
     return () => {
-      socket.off("receive_msg"); // Remove the listener when the component unmounts
-      socket.emit("leave_room", user.messageRoomId); // Optionally leave the room when unmounted
+      socket.off("receive_msg");
+      socket.off("get_last_messageTimestamp");
+      socket.emit("leave_room", user.messageRoomId);
+      socket.disconnect();
     };
-  }, [session?.user?.id, user?.messageRoomId]);
+  }, [user, socket]);
 
   const handleButtonClick = async () => {
     setHasNewMessage(false); // Mark as read on click
-    if (onClick) onClick();
+    // if (onClick) onClick();
   };
 
   return (

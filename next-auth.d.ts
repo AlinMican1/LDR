@@ -7,6 +7,7 @@ declare module "next-auth" {
     isAdmin: boolean;
     avatarURL: string;
     loverTag: string;
+    requestConnection: string;
     // request: {
     //   from: string | null; // ObjectId reference to User
     //   to: string | null; // ObjectId reference to User
@@ -21,6 +22,7 @@ declare module "next-auth" {
       isAdmin: boolean;
       avatarURL: string;
       loverTag: string;
+      requestConnection: string;
       // request: {
       //   from: string | null; // ObjectId reference to User
       //   to: string | null; // ObjectId reference to User
@@ -34,6 +36,7 @@ declare module "next-auth" {
       isAdmin: boolean;
       avatarURL: string;
       loverTag: string;
+      requestConnection: string;
       // request: {
       //   from: string | null; // ObjectId reference to User
       //   to: string | null; // ObjectId reference to User
