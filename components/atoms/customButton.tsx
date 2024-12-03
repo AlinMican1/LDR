@@ -79,17 +79,34 @@ interface AcceptLoverRequestProps {
 export function AcceptLoverRequestButton({
   senderId,
 }: AcceptLoverRequestProps) {
+  const { data: session } = useSession();
+  const [socket, setSocket] = useState(() => getSocket());
   const acceptRequest = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
+      let receiverId;
+      if (session) {
+        const { data: senderData } = await axios.get(
+          `/api/users/${session.user.email}`
+        );
+        receiverId = session.user.id;
+      }
+      console.log("HI");
+
       const response = await axios.put("/api/users/matchrequest", {
         senderId: senderId,
       });
-      if (response.status === 200) {
-        //Refresh page
+      if (response.status === 200 && session) {
+        socket.connect();
+        socket.emit("accept_lover_request", {
+          senderId: senderId,
+          receiverId: receiverId,
+        });
       }
-    } catch (error: any) {}
+    } catch (error: any) {
+      console.log(error);
+    }
   };
   return (
     <button className="acceptRequestButton" onClick={acceptRequest}>
@@ -110,23 +127,34 @@ export function RejectLoverRequestButton({
   receiverLoverTag,
 }: RejectLoverRequestProps) {
   const [socket, setSocket] = useState(() => getSocket());
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session } = useSession();
   const rejectRequest = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       //REAL TIME FETCHING
-      // if (response.status === 200) {
-      socket.connect();
-      socket.emit("cancel_lover_request", {
-        senderId: session?.user.id,
-        senderTag: loverTag,
-        email: session?.user.email,
-        requestConnection: session?.user.requestConnection,
-      });
-      // await axios.delete(
-      //   `/api/users/matchrequest/${encodeURIComponent(loverTag)}`
-      // );
+      let senderId;
+      let receiverId;
+      if (session) {
+        const { data: senderData } = await axios.get(
+          `/api/users/${session.user.email}`
+        );
+        senderId = senderData.user._id;
+        receiverId =
+          (senderData.user.request.to && senderData.user.request.to._id) ||
+          (senderData.user.request.from && senderData.user.request.from._id) ||
+          null;
+      }
+      const response = await axios.delete(
+        `/api/users/matchrequest/${encodeURIComponent(loverTag)}`
+      );
+      if (response.status === 200 && session) {
+        socket.connect();
+        socket.emit("cancel_lover_request", {
+          senderId: senderId,
+          receiverId: receiverId,
+        });
+      }
     } catch (error: any) {
       console.error(error);
     }

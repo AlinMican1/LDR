@@ -19,8 +19,16 @@ import { LoadingSkeleton1 } from "../atoms/loadingSkeletons";
 import { getSocket } from "@/app/socket";
 
 const Request = () => {
-  const { requestData, name, title, avatar, accept, paragraph, isLoading } =
-    userFetchRequest();
+  const {
+    requestData,
+    refetch,
+    name,
+    title,
+    avatar,
+    accept,
+    paragraph,
+    isLoading,
+  } = userFetchRequest();
 
   const { data: session } = useSession();
   const [addLover, setAddLover] = useState({
@@ -135,7 +143,6 @@ const Request = () => {
   useEffect(() => {
     // Join room based on user's loverTag
     if (session?.user?.id) {
-      const loverTag = session.user.loverTag;
       const userId = session.user.id;
       socket.connect();
       // socket.emit("join_room_loverTag", loverTag);
@@ -163,15 +170,21 @@ const Request = () => {
       });
 
       socket.on("lover_request_cancelled", () => {
+        setRequestReceived(false);
         console.log("Lover request canceled:");
         setRealTimeRequest(null); // Reset the real-time request to null, effectively removing the request card
-        setRequestReceived(false);
+        refetch();
+      });
+
+      socket.on("lover_request_accepted", () => {
+        window.location.reload();
       });
     }
     return () => {
       socket.off("receive_lover_request");
       socket.off("update_sender_request");
       socket.off("lover_request_cancelled");
+      socket.off("lover_request_accepted");
       socket.disconnect();
     };
   }, [AddLover, socket]);
@@ -201,7 +214,6 @@ const Request = () => {
           <div>
             {requestReceived || accept ? (
               <div>
-                {/* <p>New lover request received!</p> */}
                 <AcceptLoverRequestButton senderId={activeRequest._id} />
                 <RejectLoverRequestButton
                   loverTag={addLover.sender}
@@ -211,7 +223,6 @@ const Request = () => {
               </div>
             ) : (
               <div>
-                <div className="line"></div>
                 <RejectLoverRequestButton
                   loverTag={addLover.sender}
                   receiverLoverTag={addLover.receiver}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/user";
 import connectToDB from "@/lib/database";
 import MessageRoom from "@/models/messageRoom";
+import crypto from "crypto"; // Import crypto module
 
 export async function POST(request: NextRequest) {
   // Establish connection
@@ -21,8 +22,7 @@ export async function POST(request: NextRequest) {
       (receiver.request && receiver.request.from) ||
       (sender.request && sender.request.to) ||
       (receiver.request && receiver.request.to) ||
-      (sender.request && sender.request.from) ||
-      (sender.requestConnection && receiver.requestConnection)
+      (sender.request && sender.request.from)
     ) {
       return NextResponse.json(
         { error: "There is already has an active request" },
@@ -96,16 +96,20 @@ export async function PUT(request: NextRequest) {
         { status: 404 }
       );
     }
+    // Generate a random 16-character string
+    const randomString = crypto.randomBytes(16).toString("hex");
 
     receiver.request.from = null;
     receiver.request.to = null;
     receiver.request.status = "accepted";
     receiver.lover = sender._id;
+    receiver.Connection = randomString;
 
     sender.request.to = null;
     sender.request.from = null;
     sender.request.status = "accepted";
     sender.lover = receiver._id;
+    sender.Connection = randomString;
 
     await sender.save();
     await receiver.save();
