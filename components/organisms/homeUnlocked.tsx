@@ -1,19 +1,33 @@
+"use client";
 import { userFetchData } from "@/lib/userFetchData";
-import Modal from "../molecules/modal";
-import PickDateParent from "../molecules/pickDateParent";
+import SetAndDisplayMeet from "./setAndDisplayMeet";
+import { useEffect, useState } from "react";
+import { getSocket } from "@/app/socket";
 const HomeUnlocked = () => {
   const { user } = userFetchData();
-  let tur = true;
+  const [socket, setSocket] = useState(() => getSocket());
+  const [test, setTest] = useState("");
+  useEffect(() => {
+    if (user) {
+      socket.connect();
+      socket.emit("join_via_connectionID", {
+        connectionId: user.connection,
+      });
+      socket.on("display_meetDate", async (data) => {
+        setTest(data.meetDate);
+      });
+    }
 
+    return () => {
+      socket.off("display_meetDate");
+      socket.disconnect();
+    };
+  }, [socket, test]);
+  console.log(test);
   return (
     <div>
-      {tur ? (
-        <Modal buttonName="Set Meet Date">
-          <PickDateParent />
-        </Modal>
-      ) : (
-        <p>{user?.meetDate}</p>
-      )}
+      <p>{test}</p>
+      <SetAndDisplayMeet meetDate={test} />
     </div>
   );
 };

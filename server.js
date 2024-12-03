@@ -2,7 +2,6 @@ import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
 import axios from "axios";
-import { user } from "@nextui-org/theme";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -31,13 +30,8 @@ app.prepare().then(() => {
       io.to(data.roomId).emit("receive_msg", data);
     });
 
-    // socket.on("join_room_loverTag", (loverTag) => {
-    //   console.log(`Server log: ${loverTag} joined their room`);
-    //   socket.join(loverTag);
-    // });
-
     socket.on("join_room_loverRequest", (requestConnection) => {
-      console.log(`Server log: ${requestConnection} joined their room`);
+      // console.log(`Server log: ${requestConnection} joined their room`);
       socket.join(requestConnection);
     });
 
@@ -92,86 +86,15 @@ app.prepare().then(() => {
         } else {
           console.error("Error: receiverLoverTag is undefined.");
         }
-        // socket.emit("update_sender_request", {
-        //   message: "Request sent successfully!",
-        //   sender: senderData.user,
-        // });
       } catch (error) {
         console.error("Error fetching sender data:", error);
       }
     });
-    //   socket.on("cancel_lover_request", async (data) => {
-    //     const { senderTag, receiverTag } = data;
-    //     // try {
-    //     //   const response = await axios.delete(
-    //     //     `${
-    //     //       process.env.NEXTAUTH_URL
-    //     //     }/api/users/matchrequest/${encodeURIComponent(senderTag)}`
-    //     //   );
-    //     //   socket.emit("lover_request_canceled");
-    //     //   socket.to(senderTag).emit("lover_request_cancelled");
-    //     //   socket.to(receiverTag).emit("lover_request_cancelled");
-    //     // } catch (error) {
-    //     //   console.error(
-    //     //     "Error deleting match request for loverTag:",
-    //     //     senderTag,
-    //     //     error.response?.data || error.message
-    //     //   );
-    //     // }
-    //     console.log("senderTag", senderTag);
-    //     console.log("receiverTag", receiverTag);
-    //     // if (senderTag) {
-    //     //   socket.to(senderTag).emit("lover_request_cancelled");
-    //     // }
-    //     // if (receiverTag) {
-    //     //   socket.to(receiverTag).emit("lover_request_cancelled");
-    //     // }
-    //     io.to(data.senderTag).emit("lover_request_cancelled");
-
-    //     // socket.emit("lover_request_cancelled");
-    //   });
-    // });
 
     socket.on("cancel_lover_request", async (data) => {
-      const { email, senderId, senderTag } = data;
+      const { receiverId, senderId } = data;
 
       try {
-        // Remove the request in the backend (optional if you're handling this in the database)
-        const { data: senderData } = await axios.get(
-          `${process.env.NEXTAUTH_URL}/api/users/${email}`
-        );
-
-        const receiverId =
-          (senderData.user.request.to && senderData.user.request.to._id) ||
-          (senderData.user.request.from && senderData.user.request.from._id) ||
-          null;
-
-        // const { user } = response.data;
-        console.log("CHECKING", senderData);
-        console.log("ABBBB", receiverId);
-
-        await axios.delete(
-          `${
-            process.env.NEXTAUTH_URL
-          }/api/users/matchrequest/${encodeURIComponent(senderTag)}`
-        );
-
-        // Notify both users that the lover request is canceled
-        // if (senderTag) {
-        //   io.to(senderTag).emit("lover_request_cancelled", {
-        //     message: "Lover request canceled by sender.",
-        //     senderTag,
-        //     receiverTag,
-        //   });
-        // }
-        // if (receiverTag) {
-        //   io.to(receiverTag).emit("lover_request_cancelled", {
-        //     message: "Lover request canceled by sender.",
-        //     senderTag,
-        //     receiverTag,
-        //   });
-        // }
-
         io.to(senderId).emit("lover_request_cancelled");
         io.to(receiverId).emit("lover_request_cancelled");
       } catch (error) {
@@ -180,6 +103,27 @@ app.prepare().then(() => {
           error.response?.data || error.message
         );
       }
+    });
+
+    socket.on("accept_lover_request", async (data) => {
+      const { receiverId, senderId } = data;
+      console.log("R", receiverId);
+      console.log("S", senderId);
+      io.to(senderId).emit("lover_request_accepted");
+      io.to(receiverId).emit("lover_request_accepted");
+    });
+
+    //CONNECTIONS AFTER ADDING EACH OTHER
+    socket.on("join_via_connectionID", ({ connectionId }) => {
+      socket.join(connectionId);
+      console.log(`user with id-${socket.id} joined room - ${connectionId}`);
+    });
+
+    socket.on("add_meetDate", async (data) => {
+      const { meetDate, connectionId } = data;
+      console.log("MEET", meetDate);
+      console.log("MEET2", connectionId);
+      io.to(connectionId).emit("display_meetDate", meetDate);
     });
   });
 

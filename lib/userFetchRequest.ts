@@ -17,6 +17,7 @@ interface UserFetchRequestResult {
   paragraph?: string;
   errorMsg: string | null;
   isLoading: boolean;
+  refetch: () => void;
 }
 
 export const userFetchRequest = (): UserFetchRequestResult => {
@@ -29,7 +30,7 @@ export const userFetchRequest = (): UserFetchRequestResult => {
     }
     return { user: { request: null } };
   };
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["user", , session?.user?.email],
     queryFn: fetchData,
     enabled: sessionStatus === "authenticated" && !!session?.user?.email, // Only enable query if email exists in the session
@@ -59,5 +60,6 @@ export const userFetchRequest = (): UserFetchRequestResult => {
     accept: !!request?.from,
     paragraph,
     isLoading: sessionStatus === "loading" || isLoading,
+    refetch,
   };
 };

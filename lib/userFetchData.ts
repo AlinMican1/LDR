@@ -10,6 +10,7 @@ interface User {
   meetDate: string | null;
   messageRoomId: string;
   messageLastRead: Date;
+  connection: string;
 }
 
 interface Lover {
@@ -97,6 +98,7 @@ export const userFetchData = (): UserFetchDataResult => {
         meetDate: userData.meetDate || null,
         messageRoomId: userData.messageRooms?.[0] || "",
         messageLastRead: new Date(userData.messageLastRead),
+        connection: userData.Connection || null,
       }
     : null;
 

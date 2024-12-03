@@ -5,6 +5,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { IconButton } from "../atoms/customButton";
+import { getSocket } from "@/app/socket";
+import { userFetchData } from "@/lib/userFetchData";
 
 const PickDateParent = () => {
   const [selectedYear, setSelectedYear] = useState<number | string>("");
@@ -15,6 +17,7 @@ const PickDateParent = () => {
   const [confirmDay, setConfirmDay] = useState(false);
 
   const router = useRouter();
+  const [socket, setSocket] = useState(() => getSocket());
   const { data: session } = useSession();
 
   const todayYear = new Date().getFullYear();
@@ -74,7 +77,7 @@ const PickDateParent = () => {
   for (days; days <= dayCount; days++) {
     dayArray.push(days);
   }
-
+  const { user } = userFetchData();
   const AddDate = async (e: React.FormEvent) => {
     e.preventDefault();
     setConfirmDay(true);
@@ -88,8 +91,11 @@ const PickDateParent = () => {
 
     try {
       const response = await axios.post("/api/users/meetdate", dateData);
-      if (response.status == 200) {
-        router.refresh();
+      if (response.status == 200 && user) {
+        socket.emit("add_meetDate", {
+          meetDate: dateData.date,
+          connectionId: user.connection,
+        });
       }
     } catch (error: any) {}
   };
