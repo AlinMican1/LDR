@@ -92,7 +92,6 @@ export function AcceptLoverRequestButton({
         );
         receiverId = session.user.id;
       }
-      console.log("HI");
 
       const response = await axios.put("/api/users/matchrequest", {
         senderId: senderId,

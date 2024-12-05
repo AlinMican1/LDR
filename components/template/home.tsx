@@ -4,6 +4,8 @@ import { userFetchData } from "@/lib/userFetchData";
 import HomeLocked from "../organisms/homeLocked";
 import HomeUnlocked from "../organisms/homeUnlocked";
 import UploadComponent from "../atoms/uploadAvatar";
+import PickDateParent from "../molecules/pickDateParent";
+import Modal from "../molecules/modal";
 
 const Home = () => {
   const { lover, isLoading, user } = userFetchData(); // Get loading state

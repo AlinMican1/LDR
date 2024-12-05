@@ -24,6 +24,7 @@ interface UserFetchDataResult {
   lover: Lover | null;
   user: User | null;
   isLoading: boolean;
+  refetch: () => void;
 }
 
 export const userFetchData = (): UserFetchDataResult => {
@@ -40,7 +41,7 @@ export const userFetchData = (): UserFetchDataResult => {
     }
     return { user: null, lover: null };
   };
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["user", , session?.user?.email],
     queryFn: fetchData,
     enabled: sessionStatus === "authenticated" && !!session?.user?.email, // Only enable query if email exists in the session
@@ -111,5 +112,5 @@ export const userFetchData = (): UserFetchDataResult => {
     : null;
 
   const errorMsg = error ? "Failed to fetch user data." : null;
-  return { user, lover, errorMsg, isLoading };
+  return { user, lover, errorMsg, isLoading, refetch };
 };

@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PickDate from "../atoms/pickDate";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { IconButton } from "../atoms/customButton";
 import { getSocket } from "@/app/socket";
 import { userFetchData } from "@/lib/userFetchData";
+import SetAndDisplayMeet from "../organisms/setAndDisplayMeet";
+import DisplayMeetDate from "../atoms/displayMeetDate";
 
-const PickDateParent = () => {
+interface PickDateParentProps {
+  test: () => void;
+}
+
+const PickDateParent = ({ test }: PickDateParentProps) => {
   const [selectedYear, setSelectedYear] = useState<number | string>("");
   const [selectedMonth, setSelectedMonth] = useState<number | string>("");
   const [selectedDay, setSelectedDay] = useState<number | string>("");
@@ -16,7 +21,6 @@ const PickDateParent = () => {
   const [confirmMonth, setConfirmMonth] = useState(false);
   const [confirmDay, setConfirmDay] = useState(false);
 
-  const router = useRouter();
   const [socket, setSocket] = useState(() => getSocket());
   const { data: session } = useSession();
 
@@ -81,7 +85,7 @@ const PickDateParent = () => {
   const AddDate = async (e: React.FormEvent) => {
     e.preventDefault();
     setConfirmDay(true);
-
+    test();
     const dateString = `${selectedYear}-${selectedMonth}-${selectedDay}`;
 
     const dateData = {
@@ -94,12 +98,34 @@ const PickDateParent = () => {
       if (response.status == 200 && user) {
         socket.emit("add_meetDate", {
           meetDate: dateData.date,
-          connectionId: user.connection,
+          // connectionId: user.connection,
+          connectionId: session?.user.id,
+          email: dateData.email,
         });
       }
     } catch (error: any) {}
   };
 
+  const [test1, setTest] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      socket.connect();
+      socket.emit("join_via_connectionID", {
+        connectionId: session?.user.id,
+      });
+      console.log("Client connection ID:", user.connection);
+      socket.on("display_meetDate", (data) => {
+        console.log("hi", data);
+        setTest(data);
+      });
+    }
+    console.log(test1);
+    return () => {
+      socket.off("display_meetDate");
+      socket.disconnect();
+    };
+  }, [socket, user, session]);
   return (
     <div>
       {!confirmYear ? (
