@@ -39,11 +39,6 @@ app.prepare().then(() => {
       const { email, roomId, lastRead, userId } = data;
 
       try {
-        // Update the message read status
-        // await axios.put(`${process.env.NEXTAUTH_URL}/api/message/${roomId}`, {
-        //   userId,
-        // });
-
         // Fetch the updated user data
         const response = await axios.get(
           `${process.env.NEXTAUTH_URL}/api/users/${email}`
@@ -66,13 +61,11 @@ app.prepare().then(() => {
         const { data: senderData } = await axios.get(
           `${process.env.NEXTAUTH_URL}/api/users/${senderEmail}`
         );
-        console.log("Fetched sender data:", senderData);
         const receiverId =
           (senderData.user.request.to && senderData.user.request.to._id) ||
           (senderData.user.request.from && senderData.user.request.from._id) ||
           null;
-        // Send the 'receive_lover_request' event to the receiver with sender details
-        console.log("AAAA", receiverId);
+        // Send the 'receive_lover_request' event to the receiver with sender detail
         if (receiverId) {
           socket.to(receiverId).emit("receive_lover_request", {
             ...data,
@@ -107,8 +100,6 @@ app.prepare().then(() => {
 
     socket.on("accept_lover_request", async (data) => {
       const { receiverId, senderId } = data;
-      console.log("R", receiverId);
-      console.log("S", senderId);
       io.to(senderId).emit("lover_request_accepted");
       io.to(receiverId).emit("lover_request_accepted");
     });
@@ -120,10 +111,46 @@ app.prepare().then(() => {
     });
 
     socket.on("add_meetDate", async (data) => {
-      const { meetDate, connectionId } = data;
+      const { meetDate, connectionId, email } = data;
       console.log("MEET", meetDate);
       console.log("MEET2", connectionId);
-      io.to(connectionId).emit("display_meetDate", meetDate);
+      console.log("MEET3", email);
+
+      try {
+        // Make sure to send senderEmail in the event data
+        const { data: senderData } = await axios.get(
+          `${process.env.NEXTAUTH_URL}/api/users/${email}`
+        );
+        const lover = senderData.user.lover;
+        console.log(lover, " DFHAD");
+        // Send the 'receive_lover_request' event to the receiver with sender detail
+
+        io.to(lover).emit("display_meetDate", meetDate);
+        io.to(connectionId).emit("display_meetDate", meetDate);
+        socket.to(lover).emit("display_meetDate", meetDate);
+      } catch {}
+
+      socket.to(connectionId).emit("display_meetDate", meetDate);
+      // try {
+      //   const response = await axios.post(
+      //     `${process.env.NEXTAUTH_URL}/api/users/meetdate`,
+      //     dateData
+      //   );
+      //   if (response.status === 200) {
+      //     console.log("HI FROM ESERVERERs");
+      //   }
+      //   // Simulate fetching user data from the backend for the user sending the request
+      //   const { data: senderData } = await axios.get(
+      //     `${process.env.NEXTAUTH_URL}/api/users/${email}`
+      //   );
+      //   const meetDate = senderData.user.meetDate;
+      //   console.log("GFG", meetDate);
+      //   if (meetDate) {
+      //     io.to(connectionId).emit("display_meetDate", meetDate);
+      //   }
+      // } catch (error) {
+      //   console.error("Error fetching sender data:", error);
+      // }
     });
   });
 
