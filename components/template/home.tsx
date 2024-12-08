@@ -6,7 +6,6 @@ import HomeUnlocked from "../organisms/homeUnlocked";
 import UploadComponent from "../atoms/uploadAvatar";
 import PickDateParent from "../molecules/pickDateParent";
 import Modal from "../molecules/modal";
-
 const Home = () => {
   const { lover, isLoading, user } = userFetchData(); // Get loading state
 
@@ -15,7 +14,6 @@ const Home = () => {
   //   return <div>afDAFSHAH</div>; // Replace with a loading spinner or any indicator you prefer
   // }
 
-  // Render content based on whether there's a lover or not
   return (
     <div className="ContentContainer">
       {/* <UploadComponent /> */}
@@ -24,7 +22,7 @@ const Home = () => {
       ) : ( */}
       <div>
         <Suspense fallback={<p>Loading feed...</p>}>
-          <UserAvatar avatarPic={user?.avatarURL} loverPic={lover?.avatarURL} />
+          {/* <UserAvatar avatarPic={user?.avatarURL} loverPic={lover?.avatarURL} /> */}
           {lover ? <HomeUnlocked /> : <HomeLocked />}
         </Suspense>
       </div>

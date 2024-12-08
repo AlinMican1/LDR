@@ -1,0 +1,11 @@
+.avatarAndMeetDate {
+  width: auto;
+  /* padding: var(--padding-small); */
+  display: flex;
+  flex-direction: row;
+  border-radius: var(--border-radius-large);
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  /* background-color: pink; */
+}

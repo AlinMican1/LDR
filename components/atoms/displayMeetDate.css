@@ -1,0 +1,25 @@
+.contentContainerDates {
+  display: flex;
+  flex-direction: row;
+  /* border-radius: 20px; */
+  justify-content: center;
+  align-items: center;
+  width: auto;
+}
+
+.counterBox {
+  padding: var(--padding-small);
+  /* background-color: rgb(171, 99, 99); */
+  border-radius: var(--border-radius-small);
+  width: 12vw;
+}
+
+.mainText {
+  font-weight: 300;
+  font-size: var(--font-size-span);
+}
+
+.dayText {
+  font-weight: 400;
+  font-size: var(--font-size-span);
+}
