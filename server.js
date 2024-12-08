@@ -110,27 +110,28 @@ app.prepare().then(() => {
       console.log(`user with id-${socket.id} joined room - ${connectionId}`);
     });
 
-    socket.on("add_meetDate", async (data) => {
-      const { meetDate, connectionId, email } = data;
+    socket.on("add_meetDate", (data) => {
+      const { meetDate, connectionId } = data;
       console.log("MEET", meetDate);
       console.log("MEET2", connectionId);
-      console.log("MEET3", email);
 
-      try {
-        // Make sure to send senderEmail in the event data
-        const { data: senderData } = await axios.get(
-          `${process.env.NEXTAUTH_URL}/api/users/${email}`
-        );
-        const lover = senderData.user.lover;
-        console.log(lover, " DFHAD");
-        // Send the 'receive_lover_request' event to the receiver with sender detail
+      io.to(connectionId).emit("display_meetDate", meetDate);
 
-        io.to(lover).emit("display_meetDate", meetDate);
-        io.to(connectionId).emit("display_meetDate", meetDate);
-        socket.to(lover).emit("display_meetDate", meetDate);
-      } catch {}
+      // try {
+      //   // Make sure to send senderEmail in the event data
+      //   const { data: senderData } = await axios.get(
+      //     `${process.env.NEXTAUTH_URL}/api/users/${email}`
+      //   );
+      //   const lover = senderData.user.lover;
+      //   console.log(lover, " DFHAD");
+      //   // Send the 'receive_lover_request' event to the receiver with sender detail
 
-      socket.to(connectionId).emit("display_meetDate", meetDate);
+      //   io.to(lover).emit("display_meetDate", meetDate);
+      //   io.to(connectionId).emit("display_meetDate", meetDate);
+      //   socket.to(lover).emit("display_meetDate", meetDate);
+      // } catch {}
+
+      // socket.to(connectionId).emit("display_meetDate", meetDate);
       // try {
       //   const response = await axios.post(
       //     `${process.env.NEXTAUTH_URL}/api/users/meetdate`,

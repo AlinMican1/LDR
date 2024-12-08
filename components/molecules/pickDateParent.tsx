@@ -9,11 +9,7 @@ import { userFetchData } from "@/lib/userFetchData";
 import SetAndDisplayMeet from "../organisms/setAndDisplayMeet";
 import DisplayMeetDate from "../atoms/displayMeetDate";
 
-interface PickDateParentProps {
-  test: () => void;
-}
-
-const PickDateParent = ({ test }: PickDateParentProps) => {
+const PickDateParent = () => {
   const [selectedYear, setSelectedYear] = useState<number | string>("");
   const [selectedMonth, setSelectedMonth] = useState<number | string>("");
   const [selectedDay, setSelectedDay] = useState<number | string>("");
@@ -85,7 +81,7 @@ const PickDateParent = ({ test }: PickDateParentProps) => {
   const AddDate = async (e: React.FormEvent) => {
     e.preventDefault();
     setConfirmDay(true);
-    test();
+    // test();
     const dateString = `${selectedYear}-${selectedMonth}-${selectedDay}`;
 
     const dateData = {
@@ -96,36 +92,50 @@ const PickDateParent = ({ test }: PickDateParentProps) => {
     try {
       const response = await axios.post("/api/users/meetdate", dateData);
       if (response.status == 200 && user) {
+        console.log("SAent");
         socket.emit("add_meetDate", {
           meetDate: dateData.date,
-          // connectionId: user.connection,
-          connectionId: session?.user.id,
-          email: dateData.email,
+          connectionId: user.connection,
         });
       }
     } catch (error: any) {}
   };
 
   const [test1, setTest] = useState("");
+  // if (user) {
+  //   socket.emit("join_via_connectionID", {
+  //     connectionId: user.connection,
+  //   });
+  //   console.log("Client connection ID:", user.connection);
+  // }
 
-  useEffect(() => {
-    if (user) {
-      socket.connect();
-      socket.emit("join_via_connectionID", {
-        connectionId: session?.user.id,
-      });
-      console.log("Client connection ID:", user.connection);
-      socket.on("display_meetDate", (data) => {
-        console.log("hi", data);
-        setTest(data);
-      });
-    }
-    console.log(test1);
-    return () => {
-      socket.off("display_meetDate");
-      socket.disconnect();
-    };
-  }, [socket, user, session]);
+  // useEffect(() => {
+  //   // socket.connect();
+  //   socket.on("display_meetDate", (data) => {
+  //     console.log("hi", data);
+  //     setTest(data);
+  //   });
+  // }, [socket, AddDate]);
+  // console.log(test1);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     socket.connect();
+  //     socket.emit("join_via_connectionID", {
+  //       connectionId: user.connection,
+  //     });
+  //     console.log("Client connection ID:", user.connection);
+  //     socket.on("display_meetDate", (data) => {
+  //       console.log("hi", data);
+  //       setTest(data);
+  //     });
+  //   }
+  //   console.log(test1);
+  //   return () => {
+  //     socket.off("display_meetDate");
+  //     socket.disconnect();
+  //   };
+  // }, [socket]);
   return (
     <div>
       {!confirmYear ? (
