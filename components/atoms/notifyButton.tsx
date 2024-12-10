@@ -9,6 +9,7 @@ import "./notifyButton.css";
 
 import { getSocket } from "@/app/socket";
 import { MessageFetchData } from "@/lib/messageFetchData";
+import { socket } from "@/lib/clientSocket";
 
 interface NotifyButtonProps {
   icon?: any;
@@ -30,7 +31,8 @@ export function NotifyButton({
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [latestMessageTime, setLatestMessageTime] = useState<Date | null>(null);
   const [firstLogin, setFirstLogin] = useState<Date | null>(null);
-  const [socket, setSocket] = useState(() => getSocket()); //Check if user has lover, otherwise the link is for a different page
+  // const [socket, setSocket] = useState(() => getSocket());
+  //Check if user has lover, otherwise the link is for a different page
   if (!lover) {
     link = "./locked";
   }
