@@ -3,7 +3,7 @@ import next from "next";
 import { Server } from "socket.io";
 import axios from "axios";
 
-const dev = process.env.NODE_ENV !== "production";
+const dev = process.env.NODE_ENV !== 10000;
 const hostname = "localhost";
 const port = process.env.NODE_ENV || 3000;
 // when using middleware `hostname` and `port` must be provided below
