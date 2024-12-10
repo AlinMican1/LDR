@@ -3,10 +3,11 @@ import next from "next";
 import { Server } from "socket.io";
 import axios from "axios";
 
-const dev = process.env.NODE_ENV !== 10000;
+const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = process.env.NODE_ENV || 3000;
+const port = process.env.PORT || 3000;
 // when using middleware `hostname` and `port` must be provided below
+
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
@@ -116,42 +117,6 @@ app.prepare().then(() => {
       console.log("MEET2", connectionId);
 
       io.to(connectionId).emit("display_meetDate", meetDate);
-
-      // try {
-      //   // Make sure to send senderEmail in the event data
-      //   const { data: senderData } = await axios.get(
-      //     `${process.env.NEXTAUTH_URL}/api/users/${email}`
-      //   );
-      //   const lover = senderData.user.lover;
-      //   console.log(lover, " DFHAD");
-      //   // Send the 'receive_lover_request' event to the receiver with sender detail
-
-      //   io.to(lover).emit("display_meetDate", meetDate);
-      //   io.to(connectionId).emit("display_meetDate", meetDate);
-      //   socket.to(lover).emit("display_meetDate", meetDate);
-      // } catch {}
-
-      // socket.to(connectionId).emit("display_meetDate", meetDate);
-      // try {
-      //   const response = await axios.post(
-      //     `${process.env.NEXTAUTH_URL}/api/users/meetdate`,
-      //     dateData
-      //   );
-      //   if (response.status === 200) {
-      //     console.log("HI FROM ESERVERERs");
-      //   }
-      //   // Simulate fetching user data from the backend for the user sending the request
-      //   const { data: senderData } = await axios.get(
-      //     `${process.env.NEXTAUTH_URL}/api/users/${email}`
-      //   );
-      //   const meetDate = senderData.user.meetDate;
-      //   console.log("GFG", meetDate);
-      //   if (meetDate) {
-      //     io.to(connectionId).emit("display_meetDate", meetDate);
-      //   }
-      // } catch (error) {
-      //   console.error("Error fetching sender data:", error);
-      // }
     });
   });
 
