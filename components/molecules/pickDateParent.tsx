@@ -9,7 +9,10 @@ import { userFetchData } from "@/lib/userFetchData";
 import SetAndDisplayMeet from "../organisms/setAndDisplayMeet";
 import DisplayMeetDate from "../atoms/displayMeetDate";
 
-const PickDateParent = () => {
+interface PickParentDateProps {
+  addDate: () => void;
+}
+const PickDateParent = ({ addDate }: PickParentDateProps) => {
   const [selectedYear, setSelectedYear] = useState<number | string>("");
   const [selectedMonth, setSelectedMonth] = useState<number | string>("");
   const [selectedDay, setSelectedDay] = useState<number | string>("");
@@ -81,7 +84,7 @@ const PickDateParent = () => {
   const AddDate = async (e: React.FormEvent) => {
     e.preventDefault();
     setConfirmDay(true);
-    // test();
+    addDate();
     const dateString = `${selectedYear}-${selectedMonth}-${selectedDay}`;
 
     const dateData = {

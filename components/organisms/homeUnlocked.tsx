@@ -8,7 +8,11 @@ import "./homeUnlocked.css";
 
 const HomeUnlocked = () => {
   const { user, lover } = userFetchData();
-  const [test1, setTest] = useState("");
+  const [meetData, setMeetData] = useState("");
+  const [addedDate, setAddedDate] = useState(false);
+  const pressed = () => {
+    setAddedDate(!addedDate);
+  };
 
   if (user) {
     socket.emit("join_via_connectionID", {
@@ -20,15 +24,16 @@ const HomeUnlocked = () => {
     socket.connect();
     socket.on("display_meetDate", (data) => {
       console.log("hi", data);
-      setTest(data);
+      setMeetData(data);
     });
-  }, [socket]);
-  console.log(test1);
-  console.log(user?.meetDate);
+  }, [socket, pressed]);
   return (
     <div className="avatarAndMeetDate">
       <UserAvatar avatarPic={user?.avatarURL} loverPic={lover?.avatarURL} />
-      <SetAndDisplayMeet meetDate={test1 || user?.meetDate} />
+      <SetAndDisplayMeet
+        meetDate={meetData || user?.meetDate}
+        addDate={pressed}
+      />
     </div>
   );
 };

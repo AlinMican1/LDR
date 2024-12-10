@@ -5,9 +5,10 @@ import DisplayMeetDate from "../atoms/displayMeetDate";
 
 interface SetAndDisplayMeetProps {
   meetDate: string | null | undefined;
+  addDate: () => void;
 }
 
-const SetAndDisplayMeet = ({ meetDate }: SetAndDisplayMeetProps) => {
+const SetAndDisplayMeet = ({ meetDate, addDate }: SetAndDisplayMeetProps) => {
   return (
     <div>
       {meetDate ? (
@@ -16,7 +17,7 @@ const SetAndDisplayMeet = ({ meetDate }: SetAndDisplayMeetProps) => {
         </div>
       ) : (
         <Modal buttonName="Set Meet Date">
-          <PickDateParent />
+          <PickDateParent addDate={addDate} />
         </Modal>
       )}
     </div>
