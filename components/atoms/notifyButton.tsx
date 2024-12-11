@@ -9,7 +9,6 @@ import "./notifyButton.css";
 
 import { getSocket } from "@/app/socket";
 import { MessageFetchData } from "@/lib/messageFetchData";
-import { socket } from "@/lib/clientSocket";
 
 interface NotifyButtonProps {
   icon?: any;
@@ -31,40 +30,40 @@ export function NotifyButton({
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [latestMessageTime, setLatestMessageTime] = useState<Date | null>(null);
   const [firstLogin, setFirstLogin] = useState<Date | null>(null);
-  // const [socket, setSocket] = useState(() => getSocket());
+  const [socket, setSocket] = useState(() => getSocket());
   //Check if user has lover, otherwise the link is for a different page
   if (!lover) {
     link = "./locked";
   }
 
   //Add notification for last message even if the user is logged out.
-  useEffect(() => {
-    const fetchLatestMessageTime = async () => {
-      if (!session?.user.email || !user?.messageRoomId) return;
+  // useEffect(() => {
+  //   const fetchLatestMessageTime = async () => {
+  //     if (!session?.user.email || !user?.messageRoomId) return;
 
-      try {
-        // Fetch messages
+  //     try {
+  //       // Fetch messages
 
-        const data = await MessageFetchData(
-          user.messageRoomId,
-          session.user.email
-        );
+  //       const data = await MessageFetchData(
+  //         user.messageRoomId,
+  //         session.user.email
+  //       );
 
-        // Get the timestamp of the latest message (if available)
-        if (data.messages.length > 0) {
-          const latestMessage = data.messages[data.messages.length - 1];
-          setLatestMessageTime(new Date(latestMessage.timestamp));
-        } else {
-          setLatestMessageTime(null);
-        }
-      } catch (error) {
-        console.error("Error fetching the latest message time:", error);
-      }
-      // setTest(user?.messageLastRead);
-    };
+  //       // Get the timestamp of the latest message (if available)
+  //       if (data.messages.length > 0) {
+  //         const latestMessage = data.messages[data.messages.length - 1];
+  //         setLatestMessageTime(new Date(latestMessage.timestamp));
+  //       } else {
+  //         setLatestMessageTime(null);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching the latest message time:", error);
+  //     }
+  //     // setTest(user?.messageLastRead);
+  //   };
 
-    fetchLatestMessageTime();
-  }, [user?.messageRoomId, session?.user.email]);
+  //   fetchLatestMessageTime();
+  // }, [user?.messageRoomId, session?.user.email]);
   //offline Functionality
   // This code is fucked but idea is the first time u log in check if there is a latestmessage from db is bigger than users
   // lastest message read, if so set the notification to true, after that use realtime to get the latest message timestamp.
