@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: "HeartBridge",
   webDir: "out",
   server: {
-    url: "http://10.0.2.2:3000",
-    cleartext: true, // Allows HTTP traffic, necessary for local development
+    url: "https://ldr-w13b.onrender.com/",
+    cleartext: false, // Allows HTTP traffic, necessary for local development
   },
   android: {
     allowMixedContent: true,

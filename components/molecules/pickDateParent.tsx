@@ -84,6 +84,7 @@ const PickDateParent = ({ addDate }: PickParentDateProps) => {
   const AddDate = async (e: React.FormEvent) => {
     e.preventDefault();
     setConfirmDay(true);
+    //this function comes from homeunlocked to make the sender receive the new date aswell.
     addDate();
     const dateString = `${selectedYear}-${selectedMonth}-${selectedDay}`;
 
@@ -104,41 +105,7 @@ const PickDateParent = ({ addDate }: PickParentDateProps) => {
     } catch (error: any) {}
   };
 
-  const [test1, setTest] = useState("");
-  // if (user) {
-  //   socket.emit("join_via_connectionID", {
-  //     connectionId: user.connection,
-  //   });
-  //   console.log("Client connection ID:", user.connection);
-  // }
-
-  // useEffect(() => {
-  //   // socket.connect();
-  //   socket.on("display_meetDate", (data) => {
-  //     console.log("hi", data);
-  //     setTest(data);
-  //   });
-  // }, [socket, AddDate]);
-  // console.log(test1);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     socket.connect();
-  //     socket.emit("join_via_connectionID", {
-  //       connectionId: user.connection,
-  //     });
-  //     console.log("Client connection ID:", user.connection);
-  //     socket.on("display_meetDate", (data) => {
-  //       console.log("hi", data);
-  //       setTest(data);
-  //     });
-  //   }
-  //   console.log(test1);
-  //   return () => {
-  //     socket.off("display_meetDate");
-  //     socket.disconnect();
-  //   };
-  // }, [socket]);
+ 
   return (
     <div>
       {!confirmYear ? (

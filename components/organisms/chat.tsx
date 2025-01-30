@@ -89,20 +89,19 @@ const Chat = () => {
           _id: user?._id,
         },
       };
-      // Add the message locally
-      // setTotalMessages((prevMessages: any) => ({
-      //   messages: [...prevMessages.messages, messageData],
-      // }));
 
+      socket.emit("send_msg", messageData);
+
+      // Emit message via Socket.io
+      setMessage(""); // Clear input field
+
+      // Add the message locally
       await axios.post("api/message", {
         email: session?.user.email,
         message,
         messageTime: Date(),
         roomId: user?.messageRoomId,
       }); // Send message to server
-
-      socket.emit("send_msg", messageData); // Emit message via Socket.io
-      setMessage(""); // Clear input field
     } catch (error) {
       console.error("Error sending message:", error);
     }
