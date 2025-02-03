@@ -6,7 +6,7 @@ import HomeUnlocked from "../organisms/homeUnlocked";
 import UploadComponent from "../atoms/uploadAvatar";
 import PickDateParent from "../molecules/pickDateParent";
 import Modal from "../molecules/modal";
-import VibrateAction from "../atoms/vibrateAction";
+// import VibrateAction from "../atoms/vibrateAction";
 const Home = () => {
   const { lover, isLoading, user } = userFetchData(); // Get loading state
 
@@ -21,7 +21,7 @@ const Home = () => {
       {/* {isLoading ? (
         <p>ARFARFARF.</p> // Show this when data is still loading
       ) : ( */}
-      <VibrateAction />
+      {/* <VibrateAction /> */}
       <div>
         <Suspense fallback={<p>Loading feed...</p>}>
           {/* <UserAvatar avatarPic={user?.avatarURL} loverPic={lover?.avatarURL} /> */}
