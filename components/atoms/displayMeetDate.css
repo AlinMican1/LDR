@@ -1,25 +1,28 @@
 .contentContainerDates {
   display: flex;
+
+  background-color: rgba(95, 158, 160, 0);
   flex-direction: row;
   /* border-radius: 20px; */
   justify-content: center;
   align-items: center;
-  width: auto;
+  /* width: 80vw; */
 }
 
 .counterBox {
   padding: var(--padding-small);
   /* background-color: rgb(171, 99, 99); */
   border-radius: var(--border-radius-small);
-  width: 12vw;
+  /* width: 0vw; */
 }
 
 .mainText {
-  font-weight: 300;
+  font-weight: 600;
   font-size: var(--font-size-span);
 }
 
 .dayText {
   font-weight: 400;
   font-size: var(--font-size-span);
+  color: rgb(222, 61, 61);
 }
