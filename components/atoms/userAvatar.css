@@ -1,7 +1,8 @@
 .avatarImage {
   border-radius: 50%;
-  width: 13vw;
-  height: 13vw;
+  width: 14vw;
+  height: 14vw;
+
   border: 1px solid;
   border-color: black;
   object-fit: cover;
@@ -24,7 +25,7 @@
   position: absolute;
   bottom: 0;
   font-size: 4vw;
-  left: 9.8vw;
+  left: 10vw;
   color: red;
   padding: 0;
   height: 4vw;
@@ -77,5 +78,27 @@
     -webkit-transform: scale(0.9);
     -ms-transform: scale(0.9);
     transform: scale(0.9);
+  }
+}
+
+@media (min-width: 660px) {
+  .avatarImage {
+    width: 100px;
+    height: 100px;
+  }
+  .heart {
+    /* Space around the box */
+    position: absolute;
+    bottom: 0;
+    font-size: var(--font-size-h1);
+    left: 80px;
+    color: red;
+    padding: 0;
+    height: 27px;
+    -webkit-animation: breathing 5s ease-out infinite normal;
+    animation: breathing 5s ease-out infinite normal;
+  }
+  .loverAvatar {
+    left: 80px;
   }
 }

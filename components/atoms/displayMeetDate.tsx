@@ -59,20 +59,20 @@ const DisplayMeetDate = ({ meetDate }: DisplayMeetDateProps) => {
       <p className="mainText">Meet On {meetDate}</p>
       <div className={`${"contentContainerDates"} ${"roboto-font"} `}>
         <div className="counterBox">
-          <p className="mainText">Day</p>
           <span className={`${"dayText"} ${"inter-font"}`}>{dayCounter}</span>
+          <p className="mainText">Day</p>
         </div>
         <div className="counterBox">
-          <p className="mainText">Hour</p>
           <span className={`${"dayText"} ${"inter-font"}`}>{hourCounter}</span>
+          <p className="mainText">Hour</p>
         </div>
         <div className="counterBox">
-          <p className="mainText">Min</p>
           <span className={`${"dayText"} ${"inter-font"}`}>{minCounter}</span>
+          <p className="mainText">Min</p>
         </div>
         <div className="counterBox">
-          <p className="mainText">Sec</p>
           <span className={`${"dayText"} ${"inter-font"}`}>{secCounter}</span>
+          <p className="mainText">Sec</p>
         </div>
 
         {/* {meetDate} */}
