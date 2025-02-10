@@ -3,6 +3,7 @@ import "./navBar.css";
 import { NavBarButton } from "../atoms/customButton";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -18,6 +19,8 @@ const NavBar = () => {
       setActiveButton("settings");
     } else if (path === "/chat") {
       setActiveButton("chat");
+    } else if (path === "/upload") {
+      setActiveButton("upload");
     }
   }, [path]); // This useEffect runs every time the path changes
 
@@ -51,6 +54,12 @@ const NavBar = () => {
           icon={faBars}
           isActive={activeButton === "settings"} // Check if this button is active
           onClick={() => setActiveButton("settings")}
+        ></NavBarButton>
+        <NavBarButton
+          link="/upload"
+          icon={faCamera}
+          isActive={activeButton === "upload"} // Check if this button is active
+          onClick={() => setActiveButton("upload")}
         ></NavBarButton>
       </div>
     </div>
