@@ -1,12 +1,11 @@
 import React from "react";
-
+import { isMobile } from "react-device-detect";
+import UploadImage from "@/components/molecules/uploadImage";
 const Upload = () => {
-  const sessionId = crypto.randomUUID();
-  const QrCode = `https://api.qrserver.com/v1/create-qr-code/?size=84x84&data=http://localhost:3000/upload/${sessionId}`;
-
   return (
     <div>
-      UPLOAD PAGE <img src={QrCode} /> {sessionId}
+      {/* UPLOAD PAGE <img src={QrCode} /> {sessionId} */}
+      <UploadImage />
     </div>
   );
 };
