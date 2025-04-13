@@ -104,9 +104,8 @@ const Login = () => {
             LogIn
           </button>
           <h3 className="accountInfo">
-            I don't have an account{" "}
+            I don't have an account
             <Link className="textLink" href={"/register"}>
-              {" "}
               Register
             </Link>
           </h3>

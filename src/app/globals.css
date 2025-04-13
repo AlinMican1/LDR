@@ -117,7 +117,7 @@ a {
   text-align: center;
 }
 .subContentContainerColumn {
-  width: 80vw;
+  width: 100%;
   padding: var(--padding-small);
   display: flex;
   flex-direction: column;
